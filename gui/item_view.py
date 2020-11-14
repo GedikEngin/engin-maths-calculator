@@ -69,6 +69,10 @@ class HPSListbox(Frame):
             self.listbox.selection_clear(0, END)
             self.listbox.select_set(idx)
 
+    def delete_item_by_name(self, name):
+        idx = self._get_item_index(name)
+        self.listbox.delete(idx)
+
     def update_list_of_parents(self, list_of_parents):
         self.list_of_parents = list_of_parents
 

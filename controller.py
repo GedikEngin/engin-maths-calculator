@@ -33,7 +33,9 @@ def _on_module_new_item(name, desc):
         mv.select_item_by_name(name) #todo we have a bug that the first item is not selected
         pass
     else:
+        mv.delete_item_by_name(name)
         print('An error is present: \n Check if the module is already present within the database')
+        print('The added item has been deleted')
 
     # todo
     # story:

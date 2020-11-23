@@ -1,3 +1,41 @@
+## init database
+
+import sqlite3
+conn = sqlite3.connect('mathematics_database.db')
+c = conn.cursor()
+try:
+    c.execute('''CREATE TABLE IF NOT EXISTS modules
+                (module_id INTEGER PRIMARY KEY,
+                 name VARCHAR(25),
+                 desc VARCHAR(255)
+                 )''')
+
+    c.execute('''CREATE TABLE IF NOT EXISTS chapters
+                (chapter_id INTEGER PRIMARY KEY,
+                name VARCHAR(25),
+                desc VARCHAR(255),
+                FOREIGN KEY (module_id)
+                )''')
+
+    c.execute('''CREATE TABLE IF NOT EXISTS subchapters
+                (subchapter_id INTEGER PRIMARY KEY,
+                name VARCHAR(25),
+                desc VARCHAR(255),
+                FOREIGN KEY (chapter_id)
+                )''')
+
+    c.execute('''CREATE TABLE IF NOT EXISTS formulas
+                (formula_id INTEGER PRIMARY KEY,
+                name VARCHAR(25),
+                desc VARCHAR(255),
+                formula VARCHAR(255),
+                FOREIGN KEY (subchapter_id)
+                )''')
+except:
+    pass
+
+# todo
+
 
 # module
 
@@ -19,6 +57,9 @@ def add_new_module(name, desc):
     :param desc:
     :return: bool -> True: Module added to the DB, False: Module already exists
     """
+    c.execute("INSERT INTO modules (name, desc) VALUES (?, ?)", (name, desc))
+    conn.commit()
+
     return True
 
 
@@ -80,6 +121,9 @@ def add_new_chapter(name, desc):
     :param desc:
     :return: bool -> True: chapter added to the DB, False: chapter already exists
     """
+    c.execute("INSERT INTO chapters (name, desc) VALUES (?, ?)", (name, desc))
+    conn.commit()
+
     pass
 
 def remove_existing_chapter(name):
@@ -140,6 +184,10 @@ def add_new_subchapter(name, desc):
     :param desc:
     :return: bool -> True: subchapter added to the DB, False: subchapter already exists
     """
+
+    c.execute("INSERT INTO subchapters (name, desc) VALUES (?, ?)", (name, desc))
+    conn.commit()
+
     pass
 
 def remove_existing_subchapter(name):
@@ -180,5 +228,7 @@ def fetch_all_subchapter_formula(name):
     '''
     pass
 
-# todo populate rest of the stories
+
+conn.commit()
+conn.close()
 

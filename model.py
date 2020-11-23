@@ -2,10 +2,11 @@
 
 import sqlite3
 conn = sqlite3.connect('mathematics_database.db')
+
 c = conn.cursor()
 try:
     c.execute('''CREATE TABLE IF NOT EXISTS modules
-                (module_id INTEGER PRIMARY KEY,
+                (id INTEGER PRIMARY KEY,
                  name VARCHAR(25),
                  desc VARCHAR(255)
                  )''')
@@ -14,22 +15,25 @@ try:
                 (chapter_id INTEGER PRIMARY KEY,
                 name VARCHAR(25),
                 desc VARCHAR(255),
-                FOREIGN KEY (module_id)
+                module_id INTEGER,
+                FOREIGN KEY(module_id) REFERENCES modules(id)
                 )''')
 
     c.execute('''CREATE TABLE IF NOT EXISTS subchapters
-                (subchapter_id INTEGER PRIMARY KEY,
+                (id INTEGER PRIMARY KEY,
                 name VARCHAR(25),
                 desc VARCHAR(255),
-                FOREIGN KEY (chapter_id)
+                chapter_id INTEGER,
+                FOREIGN KEY(chapter_id) REFERENCES chapters(id)
                 )''')
 
     c.execute('''CREATE TABLE IF NOT EXISTS formulas
-                (formula_id INTEGER PRIMARY KEY,
+                (id INTEGER PRIMARY KEY,
                 name VARCHAR(25),
                 desc VARCHAR(255),
                 formula VARCHAR(255),
-                FOREIGN KEY (subchapter_id)
+                subchapter_id INTEGER,
+                FOREIGN KEY(subchapter_id) REFERENCES subchapters(id)
                 )''')
 except:
     pass

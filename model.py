@@ -61,9 +61,17 @@ def add_new_module(name, desc):
     :param desc:
     :return: bool -> True: Module added to the DB, False: Module already exists
     """
+    c.execute('''
+    SELECT name
+    FROM modules
+    WHERE name = ?
+    ''',(name,))
+
+    data = c.fetchall()
+    if data:
+        return False
     c.execute("INSERT INTO modules (name, desc) VALUES (?, ?)", (name, desc))
     conn.commit()
-
     return True
 
 
@@ -231,8 +239,4 @@ def fetch_all_subchapter_formula(name):
     :return:
     '''
     pass
-
-
-conn.commit()
-conn.close()
 

@@ -43,13 +43,24 @@ except:
 
 # module
 
-def _module_id(name): # aux function
+def module_id(name):  # aux function
     """
     Check the database to see if a module exists and returns its id in such case. Otherwise returns None
     :param name:
     :return: None: if module does not exists, str: the id of the module
     """
-    pass
+    c.execute('''
+        SELECT id
+        FROM modules
+        WHERE name = ?
+        ''', (name,))
+
+    data = c.fetchall()
+    if data:
+        return data[0]
+    else:
+        return None
+
 
 def add_new_module(name, desc):
     """
@@ -61,14 +72,8 @@ def add_new_module(name, desc):
     :param desc:
     :return: bool -> True: Module added to the DB, False: Module already exists
     """
-    c.execute('''
-    SELECT name
-    FROM modules
-    WHERE name = ?
-    ''',(name,))
 
-    data = c.fetchall()
-    if data:
+    if module_id(name):
         return False
     c.execute("INSERT INTO modules (name, desc) VALUES (?, ?)", (name, desc))
     conn.commit()
@@ -84,6 +89,7 @@ def remove_existing_module(name):
     :return:
     '''
     pass
+
 
 def update_existing_module(old_name, new_name, new_desc):
     '''
@@ -102,6 +108,7 @@ def update_existing_module(old_name, new_name, new_desc):
     '''
     pass
 
+
 def fetch_all_module_chapters(name):
     '''
     get the id of the module using the name param. that is passed through
@@ -113,8 +120,8 @@ def fetch_all_module_chapters(name):
     '''
     pass
 
-# chapter
 
+# chapter
 def chapter_id(name):
     """
     Check the database to see if a chapter exists and returns its id in such case. Otherwise returns None

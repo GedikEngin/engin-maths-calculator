@@ -25,7 +25,7 @@ def _make_widgets():
 
 # Module View
 def _on_module_new_item(name, desc):
-    print('Controller received module name and desc', name, desc)
+    print('NEA: Controller received module name and desc', name, desc)
     if model.add_new_module(name, desc):
         #clear sub/chapters listbox
         chv.clear_list()

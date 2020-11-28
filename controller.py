@@ -25,7 +25,10 @@ def _make_widgets():
 
 
 def _load_modules():
-    model.get_all_module_names()
+    module_names = model.get_all_module_names()
+    for mod in module_names:
+        if not mv.has_item(mod):
+            mv.add_new_item(mod)
 
 
 # Module View

@@ -73,9 +73,12 @@ class HPSListbox(Frame):
         idx = self._get_item_index(name)
         self.listbox.delete(idx)
 
+    def has_item(self, name):
+        contains = name in self.listbox.get(0, END)
+        return contains
 
     def add_new_item(self, name):
-        self.listbox # todo implement into gui using previous add functions
+        self._add_items_to_list(name)
 
 
     def update_list_of_parents(self, list_of_parents):

@@ -66,8 +66,7 @@ def get_all_module_names():
             SELECT name
             FROM modules
             ''')
-
-    return c.fetchall()
+    return [b[0] for b in c.fetchall()]
 
 
 def add_new_module(name, desc):

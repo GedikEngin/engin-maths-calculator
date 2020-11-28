@@ -61,6 +61,14 @@ def module_id(name):  # aux function
     else:
         return None
 
+def get_all_module_names():
+    c.execute('''
+            SELECT name
+            FROM modules
+            ''')
+
+    return c.fetchall()
+
 
 def add_new_module(name, desc):
     """

@@ -144,9 +144,9 @@ class HPSListbox(Frame):
             name = self.listbox.get(idx)
 
             self._remove_items_from_list(idx)
-            for command in self._remove_item_callbacks:
-                # command
-                command(name)
+            for subscribed_functions in self._remove_item_callbacks:
+
+                subscribed_functions(name)
 
     def _onselect(self, e):
         print(e)

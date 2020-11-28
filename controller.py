@@ -54,12 +54,15 @@ def _on_module_new_item(name, desc):
 
 def _on_module_removed_item(name):
     print('Controller is deleting module name', name)
-    # todo receive signal on removal --> subscribe this function to the modules list
+    #todo very important, remove all chapters, subchapters and formulas that are linked to the module
+    model.remove_existing_module(name)
+
     # story:
     # the item is removed, and all the linked chapters and subchapters and formulas removed
     # every item with a key that is linked to a module key is removed from the database
     # chapters and subchapters get cleared
     # the selection will go to a default, pre-existing item
+
 
 def _on_module_updated_item(name, desc):
     print('Controller received module name and desc', name, desc)

@@ -95,7 +95,11 @@ def remove_existing_module(name):
     when for loop is completed, deletes the parent module
     :return:
     '''
-    pass
+    if not module_id(name):
+        return False
+    c.execute("DELETE "
+              "FROM modules WHERE name=?", (name,))
+    conn.commit()
 
 
 def update_existing_module(old_name, new_name, new_desc):
@@ -254,3 +258,5 @@ def fetch_all_subchapter_formula(name):
     '''
     pass
 
+if __name__ == '__main__':
+    remove_existing_module('test')

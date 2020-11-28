@@ -7,7 +7,7 @@ import model
 
 window = Tk()
 
-
+# init functions
 def _make_widgets():
     global mv, chv, subch
     mv = HPSListbox(window)
@@ -22,6 +22,11 @@ def _make_widgets():
 
     subch = HPSListbox(window)
     subch.grid(row=0, column=2)
+
+
+def _load_modules():
+    model.get_all_module_names()
+
 
 # Module View
 def _on_module_new_item(name, desc):
@@ -84,4 +89,5 @@ def _on_subchapter_new_item(name, desc):
 if __name__ == '__main__':
 
     _make_widgets()
+    _load_modules()
     window.mainloop()

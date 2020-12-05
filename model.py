@@ -43,7 +43,7 @@ except:
 
 # module
 
-def module_id(name):  # aux function
+def get_module_id(name):  # aux function
     """
     Check the database to see if a module exists and returns its id in such case. Otherwise returns None
     :param name:
@@ -80,7 +80,7 @@ def add_new_module(name, desc):
     :return: bool -> True: Module added to the DB, False: Module already exists
     """
 
-    if module_id(name):
+    if get_module_id(name):
         return False
     c.execute("INSERT INTO modules (name, desc) VALUES (?, ?)", (name, desc))
     conn.commit()
@@ -95,7 +95,7 @@ def remove_existing_module(name):
     when for loop is completed, deletes the parent module
     :return:
     '''
-    if not module_id(name):
+    if not get_module_id(name):
         return False
     c.execute("DELETE "
               "FROM modules WHERE name=?", (name,))
@@ -133,7 +133,7 @@ def fetch_all_module_chapters(name):
 
 
 # chapter
-def chapter_id(name):
+def get_chapter_id(name):
     """
     Check the database to see if a chapter exists and returns its id in such case. Otherwise returns None
     :param name:
@@ -168,10 +168,10 @@ def add_new_chapter(name, desc, mod_name):
     :param desc:
     :return: bool -> True: chapter added to the DB, False: chapter already exists
     """
-    if chapter_id(name):
+    if get_chapter_id(name):
         return False
 
-    mod_id = module_id(mod_name)
+    mod_id = get_module_id(mod_name)
     c.execute("INSERT INTO chapters (name, desc, module_id) VALUES (?, ?, ?)", (name, desc, mod_id))
     conn.commit()
     return True
@@ -185,7 +185,7 @@ def remove_existing_chapter(name):
     :return:
     '''
 
-    if not chapter_id(name):
+    if not get_chapter_id(name):
         return False
     c.execute("DELETE "
               "FROM chapters WHERE name=?", (name,))
@@ -222,7 +222,7 @@ def fetch_all_chapter_subchapter(name):
 
 # subchapter
 
-def subchapter_id(name):
+def get_subchapter_id(name):
     """
         Check the database to see if a subchapter exists and returns its id in such case. Otherwise returns None
         :param name:

@@ -1,7 +1,7 @@
 ## init database
 
 import sqlite3
-conn = sqlite3.connect('mathematics_database.db')
+conn = sqlite3.connect('Mathematics_database.db')
 
 c = conn.cursor()
 try:
@@ -12,7 +12,7 @@ try:
                  )''')
 
     c.execute('''CREATE TABLE IF NOT EXISTS chapters
-                (chapter_id INTEGER PRIMARY KEY,
+                (id INTEGER PRIMARY KEY,
                 name VARCHAR(25),
                 desc VARCHAR(255),
                 module_id INTEGER,
@@ -57,7 +57,7 @@ def module_id(name):  # aux function
 
     data = c.fetchall()
     if data:
-        return data[0]
+        return data[0][0]
     else:
         return None
 
@@ -139,9 +139,26 @@ def chapter_id(name):
     :param name:
     :return: None: if module does not exists, str: the id of the chapter
     """
-    pass
+    c.execute('''
+        SELECT id
+        FROM chapters
+        WHERE name = ?
+        ''', (name,))
 
-def add_new_chapter(name, desc):
+    data = c.fetchall()
+    if data:
+        return data[0]
+    else:
+        return None
+
+def get_all_chapter_names():
+    c.execute('''
+            SELECT name
+            FROM chapters
+            ''')
+    return [b[0] for b in c.fetchall()]
+
+def add_new_chapter(name, desc, mod_name):
     """
     check if the chapter already exists or not
     if chapter does not exist, simply add the chapter name and description into the database
@@ -151,10 +168,13 @@ def add_new_chapter(name, desc):
     :param desc:
     :return: bool -> True: chapter added to the DB, False: chapter already exists
     """
-    c.execute("INSERT INTO chapters (name, desc) VALUES (?, ?)", (name, desc))
-    conn.commit()
+    if chapter_id(name):
+        return False
 
-    pass
+    mod_id = module_id(mod_name)
+    c.execute("INSERT INTO chapters (name, desc, module_id) VALUES (?, ?, ?)", (name, desc, mod_id))
+    conn.commit()
+    return True
 
 def remove_existing_chapter(name):
     '''
@@ -164,6 +184,12 @@ def remove_existing_chapter(name):
     when for loop is completed, deletes the parent chapter
     :return:
     '''
+
+    if not chapter_id(name):
+        return False
+    c.execute("DELETE "
+              "FROM chapters WHERE name=?", (name,))
+    conn.commit()
     pass
 
 def update_existing_chapter(old_name, new_name, new_desc):

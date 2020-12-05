@@ -80,6 +80,14 @@ class HPSListbox(Frame):
     def add_new_item(self, name):
         self._add_items_to_list(name)
 
+    def get_selected_item(self):
+
+        selection = self.listbox.curselection()
+        if selection:
+            selection_name = self.listbox.get(selection[0])
+        else:
+            selection_name = None
+        return selection_name
 
     def update_list_of_parents(self, list_of_parents):
         self.list_of_parents = list_of_parents

@@ -157,7 +157,13 @@ class HPSListbox(Frame):
                 subscribed_functions(name)
 
     def _onselect(self, e):
-        print(e)
+        idx = self.listbox.curselection()
+        if idx:
+            name = self.listbox.get(idx)
+            for command in self._select_item_callbacks:
+                command(name)
+
+
     # actions
 
     def _add_items_to_list(self, item: str):

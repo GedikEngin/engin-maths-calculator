@@ -140,7 +140,7 @@ def update_existing_module(old_name, new_name, new_desc):
     pass
 
 
-def fetch_all_module_chapters(name):
+def fetch_all_module_chapters(mod_name):
     '''
     get the id of the module using the name param. that is passed through
     if the module exists:
@@ -149,7 +149,17 @@ def fetch_all_module_chapters(name):
         return a warning
     :return:
     '''
-    pass
+
+    mod_id = get_module_id(mod_name)
+
+    if not mod_id:
+        return []
+
+    c.execute('SELECT name FROM chapters WHERE module_id = ?', (mod_id,))
+    chapters = c.fetchall()
+    print(chapters)
+    return [b[0] for b in chapters]
+
 
 
 # chapter
@@ -231,7 +241,7 @@ def update_existing_chapter(old_name, new_name, new_desc):
     '''
     pass
 
-def fetch_all_chapter_subchapter(name):
+def fetch_all_chapter_subchapter(mod_name, chap_name):
     '''
     get the id of the chapter using the name param. that is passed through
     if the chapter exists:
@@ -240,7 +250,17 @@ def fetch_all_chapter_subchapter(name):
         return a warning
     :return:
     '''
-    pass
+
+    chap_id = get_chapter_id(mod_name, chap_name)
+
+    if not chap_id:
+        return []
+
+    c.execute('SELECT name FROM subchapters WHERE chapter_id = ?', (chap_id,))
+    subchapter = c.fetchall()
+    print(subchapter)
+    return [b[0] for b in subchapter]
+
 
 # subchapter
 

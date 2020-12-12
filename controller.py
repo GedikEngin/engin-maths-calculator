@@ -22,7 +22,7 @@ def _make_widgets():
     chv.subscribe_to_new_item_event(_on_chapter_new_item)
     chv.subscribe_to_removed_item_event(_on_chapter_removed_item)
     # chv.subscribe_to_update_item_event(_on_chapter_updated_item) # todo attend the lack of the function/holder
-    # chv.subscribe_to_select_item_event(_on_chapter_selected_item)
+    chv.subscribe_to_select_item_event(_on_chapter_selected_item)
 
 
 
@@ -41,12 +41,22 @@ def _load_modules():
 
 def _load_chapters():
     chapter_names = model.get_all_chapter_names()
+    _load_specific_chapters(chapter_names)
+
+
+def _load_specific_chapters(chapter_names):
+    chv.clear_list()
     for chap in chapter_names:
         if not chv.has_item(chap):
             chv.add_new_item(chap)
 
+
 def _load_subchapters():
     subchapter_names = model.get_all_subchapter_names()
+    _load_specific_subchapters(subchapter_names)
+
+def _load_specific_subchapters(subchapter_names):
+    subch.clear_list()
     for subchap in subchapter_names:
         if not subch.has_item(subchap):
             subch.add_new_item(subchap)
@@ -95,15 +105,18 @@ def _on_module_updated_item(name, desc):
     # the display in the list box and description will change to match the updated item
 
 
-def _on_module_selected_item(name, desc):
-    print('Controller received module name and desc', name, desc)
+def _on_module_selected_item(mod_name):
+    print('Controller received module name', mod_name)
+    chapters = model.fetch_all_module_chapters(mod_name)
+    _load_specific_chapters(chapters)
+
     # todo
     # story:
     # when the module is selected, we get the list of all chapter items to populate the chapter list box
     # the chapter list box is populated with the retrieved items
     # the description box is populated with the selected item
     # the first chapter is auto selected
-    # ^^ the controller also retrieves the linked subchapters
+    # {for chapters} ^^ the controller also retrieves the linked subchapters
 
 # Chapter View
 def _on_chapter_new_item(name, desc):
@@ -133,6 +146,18 @@ def _on_chapter_removed_item(name):
     print('Controller is deleting module name', name)
     #todo very important, remove all chapters, subchapters and formulas that are linked to the module
     model.remove_existing_chapter(name, mod_name)
+
+def _on_chapter_selected_item(chap_name):
+    print('Controller received module name', chap_name)
+
+    mod_name = mv.get_selected_item()
+    if mod_name is None:
+        print('NEA: There is no mod selection, please select a mod before viewing a chapter.')
+        return
+
+    subchapter = model.fetch_all_chapter_subchapter(mod_name, chap_name)
+    _load_specific_subchapters(subchapter)
+
 
 
 # Sub chapter View

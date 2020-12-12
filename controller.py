@@ -24,9 +24,14 @@ def _make_widgets():
     # chv.subscribe_to_update_item_event(_on_chapter_updated_item) # todo attend the lack of the function/holder
     # chv.subscribe_to_select_item_event(_on_chapter_selected_item)
 
+
+
     subch = HPSListbox(window)
     subch.grid(row=0, column=2)
-
+    subch.subscribe_to_new_item_event(_on_subchapter_new_item)
+    subch.subscribe_to_removed_item_event(_on_subchapter_removed_item)
+    # subch.subscribe_to_update_item_event(_on_chapter_updated_item) # todo attend the lack of the function/holder
+    # subch.subscribe_to_select_item_event(_on_chapter_selected_item)
 
 def _load_modules():
     module_names = model.get_all_module_names()
@@ -39,6 +44,12 @@ def _load_chapters():
     for chap in chapter_names:
         if not chv.has_item(chap):
             chv.add_new_item(chap)
+
+def _load_subchapters():
+    subchapter_names = model.get_all_subchapter_names()
+    for subchap in subchapter_names:
+        if not subch.has_item(subchap):
+            subch.add_new_item(subchap)
 
 
 # Module View
@@ -66,6 +77,8 @@ def _on_module_removed_item(name):
     print('Controller is deleting module name', name)
     #todo very important, remove all chapters, subchapters and formulas that are linked to the module
     model.remove_existing_module(name)
+    chv.clear_list()
+    subch.clear_list()
 
     # story:
     # the item is removed, and all the linked chapters and subchapters and formulas removed
@@ -80,6 +93,7 @@ def _on_module_updated_item(name, desc):
     # story:
     # when updated the items name and description are updated only, all the links remain the same
     # the display in the list box and description will change to match the updated item
+
 
 def _on_module_selected_item(name, desc):
     print('Controller received module name and desc', name, desc)
@@ -112,14 +126,45 @@ def _on_chapter_new_item(name, desc):
 
 
 def _on_chapter_removed_item(name):
+    mod_name = mv.get_selected_item()
+    if mod_name is None:
+        print('NEA: There is no mod selection, please select a mod before adding a chapter.')
+        return
     print('Controller is deleting module name', name)
     #todo very important, remove all chapters, subchapters and formulas that are linked to the module
-    model.remove_existing_chapter(name)
+    model.remove_existing_chapter(name, mod_name)
+
 
 # Sub chapter View
 def _on_subchapter_new_item(name, desc):
-    print('Controller received subchapter name and desc', name, desc)
+    print('Controller received chapter name and desc', name, desc)
 
+    mod_name = mv.get_selected_item()
+    if mod_name is None:
+        print('NEA: There is no module selection, please select a module before adding a subchapter.')
+        return
+
+    chap_name = chv.get_selected_item()
+    if chap_name is None:
+        print('NEA: There is no chapter selection, please select a chapter before adding a subchapter.')
+        return
+
+    if model.add_new_subchapter(mod_name, chap_name, name, desc):
+        pass
+    else:
+        subch.delete_item_by_name(name)
+        print('An error is present: \n Check if the subchapter is already present within the database')
+        print('The added item has been deleted')
+
+
+def _on_subchapter_removed_item(name):
+    chap_name = chv.get_selected_item()
+    if chap_name is None:
+        print('NEA: There is no chapter selection, please select a chapter before adding a subchapter.')
+        return
+    print('Controller is deleting chapter name', name)
+    #todo very important, remove all chapters, subchapters and formulas that are linked to the module
+    model.remove_existing_subchapter(name, chap_name)
 
 
 if __name__ == '__main__':
@@ -127,4 +172,5 @@ if __name__ == '__main__':
     _make_widgets()
     _load_modules()
     _load_chapters()
+    _load_subchapters()
     window.mainloop()

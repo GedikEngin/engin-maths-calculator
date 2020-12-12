@@ -15,8 +15,7 @@ try:
                 (id INTEGER PRIMARY KEY,
                 name VARCHAR(25),
                 desc VARCHAR(255),
-                module_id INTEGER,
-                FOREIGN KEY(module_id) REFERENCES modules(id)
+                module_id INTEGER
                 )''')
 
     c.execute('''CREATE TABLE IF NOT EXISTS subchapters
@@ -24,7 +23,7 @@ try:
                 name VARCHAR(25),
                 desc VARCHAR(255),
                 chapter_id INTEGER,
-                FOREIGN KEY(chapter_id) REFERENCES chapters(id)
+                module_id INTEGER
                 )''')
 
     c.execute('''CREATE TABLE IF NOT EXISTS formulas
@@ -32,8 +31,9 @@ try:
                 name VARCHAR(25),
                 desc VARCHAR(255),
                 formula VARCHAR(255),
-                subchapter_id INTEGER,
-                FOREIGN KEY(subchapter_id) REFERENCES subchapters(id)
+                subchapter_id INTEGER
+                chapter_id INTEGER
+                module_id INTEGER
                 )''')
 except:
     pass
@@ -95,10 +95,30 @@ def remove_existing_module(name):
     when for loop is completed, deletes the parent module
     :return:
     '''
-    if not get_module_id(name):
+
+    mod_id = get_module_id(name)
+    if not mod_id:
         return False
+
+    c.execute('''
+            SELECT name
+            FROM chapters
+            WHERE module_id = ?
+            ''', (mod_id,))
+
+    chapter_names = c.fetchall()
+
+    for ch in chapter_names:
+        ch = ch[0]
+        remove_existing_chapter(ch, name)
+
+
+
     c.execute("DELETE "
               "FROM modules WHERE name=?", (name,))
+
+
+
     conn.commit()
 
 
@@ -133,21 +153,23 @@ def fetch_all_module_chapters(name):
 
 
 # chapter
-def get_chapter_id(name):
+def get_chapter_id(mod_name, chap_name):
     """
     Check the database to see if a chapter exists and returns its id in such case. Otherwise returns None
     :param name:
     :return: None: if module does not exists, str: the id of the chapter
     """
+    mod_id = get_module_id(mod_name)
     c.execute('''
         SELECT id
         FROM chapters
         WHERE name = ?
-        ''', (name,))
+        AND module_id = ?
+        ''', (chap_name, mod_id))
 
     data = c.fetchall()
     if data:
-        return data[0]
+        return data[0][0]
     else:
         return None
 
@@ -158,25 +180,25 @@ def get_all_chapter_names():
             ''')
     return [b[0] for b in c.fetchall()]
 
-def add_new_chapter(name, desc, mod_name):
+def add_new_chapter(chap_name, desc, mod_name):
     """
     check if the chapter already exists or not
     if chapter does not exist, simply add the chapter name and description into the database
     if chapter does exists, return popup?
 
-    :param name:
+    :param chap_name:
     :param desc:
     :return: bool -> True: chapter added to the DB, False: chapter already exists
     """
-    if get_chapter_id(name):
+    if get_chapter_id(mod_name, chap_name):
         return False
 
     mod_id = get_module_id(mod_name)
-    c.execute("INSERT INTO chapters (name, desc, module_id) VALUES (?, ?, ?)", (name, desc, mod_id))
+    c.execute("INSERT INTO chapters (name, desc, module_id) VALUES (?, ?, ?)", (chap_name, desc, mod_id))
     conn.commit()
     return True
 
-def remove_existing_chapter(name):
+def remove_existing_chapter(name, module_name):
     '''
     get id
     uses id to get all child subchapters --> initiates deleting from subchapters simultaneously
@@ -184,13 +206,13 @@ def remove_existing_chapter(name):
     when for loop is completed, deletes the parent chapter
     :return:
     '''
-
+    module_id = get_module_id(module_name)
     if not get_chapter_id(name):
         return False
     c.execute("DELETE "
-              "FROM chapters WHERE name=?", (name,))
+              "FROM chapters WHERE name=? and module_id = ?", (name, module_id))
     conn.commit()
-    pass
+    # todo remove all the linked subchapters
 
 def update_existing_chapter(old_name, new_name, new_desc):
     '''
@@ -222,39 +244,72 @@ def fetch_all_chapter_subchapter(name):
 
 # subchapter
 
-def get_subchapter_id(name):
+def get_subchapter_id(mod_name, chap_name, subchap_name):
     """
-        Check the database to see if a subchapter exists and returns its id in such case. Otherwise returns None
-        :param name:
-        :return: None: if module does not exists, str: the id of the subchapter
-        """
-    pass
+    Check the database to see if a chapter exists and returns its id in such case. Otherwise returns None
+    :param name:
+    :return: None: if module does not exists, str: the id of the chapter
+    """
 
-def add_new_subchapter(name, desc):
+    chap_id = get_chapter_id(mod_name, chap_name)
+    mod_id = get_module_id(mod_name)
+
+    c.execute('''
+        SELECT id
+        FROM subchapters
+        WHERE name = ?
+        AND chapter_id = ?
+        AND module_id = ?
+        ''', (subchap_name, chap_id, mod_id))
+
+    data = c.fetchall()
+    if data:
+        return data[0][0]
+    else:
+        return None
+
+def get_all_subchapter_names():
+    c.execute('''
+            SELECT name
+            FROM subchapters
+            ''')
+    return [b[0] for b in c.fetchall()]
+
+def add_new_subchapter(mod_name, chap_name, subchap_name, desc):
     """
-    check if the subchapter already exists or not
-    if subchapter does not exist, simply add the subchapter name and description into the database
-    if subchapter does exists, return popup?
+    check if the chapter already exists or not
+    if chapter does not exist, simply add the chapter name and description into the database
+    if chapter does exists, return popup?
 
     :param name:
     :param desc:
-    :return: bool -> True: subchapter added to the DB, False: subchapter already exists
+    :return: bool -> True: chapter added to the DB, False: chapter already exists
     """
-
-    c.execute("INSERT INTO subchapters (name, desc) VALUES (?, ?)", (name, desc))
+    chap_id = get_chapter_id(mod_name, chap_name)
+    mod_id = get_module_id(mod_name)
+    sub_chap_id = get_subchapter_id(mod_name, chap_name, subchap_name)
+    if sub_chap_id:
+        return False
+    c.execute("INSERT INTO subchapters (name, desc, chapter_id, module_id) VALUES (?, ?, ?, ?)",
+              (subchap_name, desc, chap_id, mod_id))
     conn.commit()
+    return True
 
-    pass
-
-def remove_existing_subchapter(name):
+def remove_existing_subchapter(mod_name, chapter_name, subchapter_name):
     '''
     get id
-    uses id to get all child formula --> initiates deleting from formula simultaneously
-    in a for loop calls the deletion of the corresponding formula
-    when for loop is completed, deletes the parent subchapter
+    uses id to get all child subchapters --> initiates deleting from subchapters simultaneously
+    in a for loop calls the deletion of the corresponding subchapters
+    when for loop is completed, deletes the parent chapter
     :return:
     '''
-    pass
+    chapter_id = get_chapter_id(mod_name, chapter_name)
+    if not get_subchapter_id(subchapter_name):
+        return False
+    c.execute("DELETE "
+              "FROM subchapters WHERE name=? and chapter_id = ?", (mod_name, chapter_id))
+    conn.commit()
+    # todo remove all the linked subchapters
 
 def update_existing_subchapter(old_name, new_name, new_desc):
     '''

@@ -27,7 +27,9 @@ class AddNewItemDialogue(Toplevel):
         # todo format the gui to have description box, on submit, print out name and description
 
     def on_okay(self):
-        self.return_variable = (self.sv_item_name.get(), 'This is a place holder for the description for now. later it will be replaced bby the actual value')
+        name = self.sv_item_name.get()
+        desc = name + 'place holder desc'
+        self.return_variable = (name, desc)
         # self.sv_item_desc.get()) # todo solve, how to get data from a textbox
 
         print(self.return_variable)

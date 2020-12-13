@@ -11,7 +11,6 @@ class Description(Frame):
         self.text_item_desc.tag_configure("bold", font="Helvetica 12 bold")
         self.text_item_desc.tag_configure("normal", font="Helvetica 12")
 
-        self.text_item_desc.insert(END, 'Enter item description')
         self.text_item_desc.config(state=DISABLED)
         self.text_item_desc.grid(row=1, column=0, padx=0, pady=0)
 

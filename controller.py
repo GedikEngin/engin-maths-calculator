@@ -5,10 +5,10 @@ import model
 
 
 window = Tk()
-
+global mv, chv, subchv, descv, formv
 # init functions
 def _make_widgets():
-    global mv, chv, subchv, descv
+    global mv, chv, subchv, descv, formv
     mv = HPSListbox(window)
     mv.grid(row=0, column=0)
     mv.subscribe_to_new_item_event(_on_module_new_item)
@@ -20,18 +20,22 @@ def _make_widgets():
     chv.grid(row=1, column=0)
     chv.subscribe_to_new_item_event(_on_chapter_new_item)
     chv.subscribe_to_removed_item_event(_on_chapter_removed_item)
-    # chv.subscribe_to_update_item_event(_on_chapter_updated_item) # todo attend the lack of the function/holder
     chv.subscribe_to_select_item_event(_on_chapter_selected_item)
 
     subchv = HPSListbox(window)
     subchv.grid(row=2, column=0)
     subchv.subscribe_to_new_item_event(_on_subchapter_new_item)
     subchv.subscribe_to_removed_item_event(_on_subchapter_removed_item)
-    # subchv.subscribe_to_update_item_event(_on_chapter_updated_item) # todo attend the lack of the function/holder
-    # subchv.subscribe_to_select_item_event(_on_chapter_selected_item)
+    subchv.subscribe_to_select_item_event(_on_subchapter_selected_item)
+
+    formv = HPSListbox(window)
+    formv.grid(row=3, column=0)
+    formv.subscribe_to_new_item_event(_on_formula_new_item)
+    formv.subscribe_to_removed_item_event(_on_formula_removed_item)
+    formv.subscribe_to_select_item_event(_on_formula_selected_item)
 
     descv = Description(window)
-    descv.grid(row=3, column=0)
+    descv.grid(row=0, column=1, rowspan=4)
 
 def _load_modules():
     module_names = model.get_all_module_names()
@@ -60,6 +64,19 @@ def _load_specific_subchapters(subchapter_names):
     for subchap in subchapter_names:
         if not subchv.has_item(subchap):
             subchv.add_new_item(subchap)
+
+
+def _load_formulas():
+    formula_names = model.get_all_formula_names()
+    _load_specific_formulas(formula_names)
+
+def _load_specific_formulas(formula_names):
+
+    formv.clear_list()
+    for form in formula_names:
+        if not formv.has_item(form):
+            formv.add_new_item(form)
+
 
 
 # Module View
@@ -109,7 +126,13 @@ def _on_module_selected_item(mod_name):
     print('Controller received module name', mod_name)
     chapters = model.fetch_all_module_chapters(mod_name)
     _load_specific_chapters(chapters)
-    descv.update_text('Module description should go here', mod_name)
+    subchv.clear_list()
+
+    desc = model.get_module_desc(mod_name)
+    if desc is None:
+        desc = 'Error: Could not find description'
+
+    descv.update_text(desc, mod_name)
 
     # todo
     # story:
@@ -156,6 +179,12 @@ def _on_chapter_selected_item(chap_name):
         print('NEA: There is no mod selection, please select a mod before viewing a chapter.')
         return
 
+    desc = model.get_chapter_desc(mod_name, chap_name)
+    if desc is None:
+        desc = 'Error: Could not find description'
+
+    descv.update_text(desc, chap_name)
+
     subchapter = model.fetch_all_chapter_subchapter(mod_name, chap_name)
     _load_specific_subchapters(subchapter)
 
@@ -192,6 +221,80 @@ def _on_subchapter_removed_item(name):
     #todo very important, remove all chapters, subchapters and formulas that are linked to the module
     model.remove_existing_subchapter(name, chap_name)
 
+def _on_subchapter_selected_item(subchap_name):
+    mod_name = mv.get_selected_item()
+    chap_name = chv.get_selected_item()
+    if mod_name is None or chap_name is None:
+        descv.update_text('NEA: There is no mod or chapter selection, please select a mod before viewing a chapter.',
+                          'ERROR')
+        return
+
+    # todo fomula_names = model.fetch_all_subchapter_formula(mod_name, chap_name, name)
+
+    desc = model.get_subchapter_desc(mod_name, chap_name, subchap_name)
+    if desc is None:
+        desc = 'Error: Could not find description'
+
+    descv.update_text(desc, subchap_name)
+
+
+# formula
+
+def _on_formula_new_item(name, desc):
+    print('Controller received chapter name and desc', name, desc)
+
+    mod_name = mv.get_selected_item()
+    if mod_name is None:
+        print('NEA: There is no module selection, please select a module before adding a subchapter.')
+        return
+
+    chap_name = chv.get_selected_item()
+    if chap_name is None:
+        print('NEA: There is no chapter selection, please select a chapter before adding a subchapter.')
+        return
+
+    subchap_name = subchv.get_selected_item()
+    if subchap_name is None:
+        print('No subchap selection, please select')
+
+    if model.add_new_formula(mod_name, chap_name,subchap_name, name, desc):
+        pass
+    else:
+        formv.delete_item_by_name(name)
+        print('An error is present: \n Check if the formula is already present within the database')
+        print('The added item has been deleted')
+
+
+def _on_formula_removed_item(name):
+    formula_name = formv.get_selected_item()
+    mod_name = mv.get_selected_item()
+    chap_name = chv.get_selected_item()
+    subchap_name = subchv.get_selected_item()
+    if formula_name is None or mod_name is None or chap_name is None or subchap_name is None:
+        print('NEA: There is no formula selection, please select a subchapter before removing a formula.')
+        return
+    print('Controller is deleting chapter name', name)
+    #todo very important, remove all chapters, subchapters and formulas that are linked to the module
+    model.remove_existing_formula(mod_name, chap_name, subchap_name, formula_name)
+
+def _on_formula_selected_item(formula_name):
+    mod_name = mv.get_selected_item()
+    chap_name = chv.get_selected_item()
+    subchap_name = subchv.get_selected_item()
+    if mod_name is None or chap_name is None or subchap_name is None:
+        descv.update_text('NEA: There is no mod or chapter selection, please select a mod before viewing a chapter.',
+                          'ERROR')
+        return
+
+    # todo fomula_names = model.fetch_all_subchapter_formula(mod_name, chap_name, name)
+
+    desc = model.get_formula_desc(mod_name, chap_name, subchap_name, formula_name)
+    if desc is None:
+        desc = 'Error: Could not find description'
+
+    descv.update_text(desc, formula_name)
+
+
 
 if __name__ == '__main__':
 
@@ -199,4 +302,5 @@ if __name__ == '__main__':
     _load_modules()
     _load_chapters()
     _load_subchapters()
+    _load_formulas()
     window.mainloop()

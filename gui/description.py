@@ -7,7 +7,7 @@ class Description(Frame):
         super(Description, self).__init__(parent)
 
         self.sv_item_desc = StringVar()
-        self.text_item_desc = Text(self, width=50, height=10, bg="grey50")
+        self.text_item_desc = Text(self, width=50, height=58, bg="grey50")
         self.text_item_desc.tag_configure("bold", font="Helvetica 12 bold")
         self.text_item_desc.tag_configure("normal", font="Helvetica 12")
 

@@ -28,7 +28,10 @@ class AddNewItemDialogue(Toplevel):
 
     def on_okay(self):
         name = self.sv_item_name.get()
-        desc = name + 'place holder desc'
+        desc = self.text_item_desc.get("1.0", END)
+        if desc == 'Enter item description\n':
+            desc = ''
+
         self.return_variable = (name, desc)
         # self.sv_item_desc.get()) # todo solve, how to get data from a textbox
 

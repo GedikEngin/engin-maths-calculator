@@ -12,18 +12,18 @@ def series(a, b, n):
 
     # display loop series
     for i in range(0, n + 1):
-        # For calculating the value of n choose r (nCr)
+        # for calculating the value of n choose r (nCr)
         factorial_ni = factorial(n - i)
         factorial_i = factorial(i)
 
-        # calculating the value of a to the power k and b to the power k
+        # calculate a and b to the power k
         power_a = pow(a, n - i)
         power_b = pow(b, i)
 
-        # display the series
+        # display string
         print((int((factorial_n * power_a * power_b) / (factorial_ni * factorial_i))), 'x^',i)
 
-    # Driver Code
+    # running Code
 
 print('Traditional format: (a+b)^n')
 

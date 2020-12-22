@@ -204,8 +204,8 @@ if __name__ == '__main__':
     mv = HPSListbox(window)
     mv.pack()
 
-    add_item_test(mv)
-    delete_item_test(mv)
+    # add_item_test(mv)
+    # delete_item_test(mv)
     # clear_item_test(mv)
     window.mainloop()
 

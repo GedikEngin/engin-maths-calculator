@@ -1,5 +1,6 @@
 from tkinter import *
 
+
 class FormulaCreationFrame(Frame):
 
     def __init__(self, parent):
@@ -11,17 +12,16 @@ class FormulaCreationFrame(Frame):
         self.text_item_desc.grid(row=0, column=0, padx=2, pady=5, columnspan = 11)
 
 
-
         # buttons
 
-        btn_help = Button(self, relief=RAISED, text='Help')
-        btn_help.grid(row=6, column=0, padx=2, pady=5, columnspan = 5)
+        btn_help = Button(self, relief=RAISED, text='Help', command=self.help_box)
+        btn_help.grid(row=6, column=0, padx=2, pady=5, columnspan=5)
 
         btn_clear = Button(self, relief=RAISED, text='Clear')
         btn_clear.grid(row=6, column=5, padx=2, pady=5)
 
         btn_submit = Button(self, relief=RAISED, text='Submit')
-        btn_submit.grid(row=6, column=6, padx=2, pady=5, columnspan = 5)
+        btn_submit.grid(row=6, column=6, padx=2, pady=5, columnspan=5)
 
         # icon buttons
         squaring = PhotoImage(file=r"C:\Users\enggd\PycharmProjects\nea-calculator\icons\squaring.png")
@@ -250,7 +250,11 @@ class FormulaCreationFrame(Frame):
         self.text_item_desc.insert(END, btn_text)
 
     def help_box(self):
-        pass
+        help_box = Toplevel()
+
+        text_item_desc = Text(help_box, width=50, height=10, bg="grey50")
+        text_item_desc.insert(END, 'Enter item description')
+        text_item_desc.pack()
 
 
 if __name__ == '__main__':
@@ -258,8 +262,4 @@ if __name__ == '__main__':
     createv = FormulaCreationFrame(window)
     createv.pack()
     window.mainloop()
-
-
-
-
 

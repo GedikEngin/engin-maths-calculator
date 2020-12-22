@@ -1,12 +1,15 @@
 import numpy as np
 
+
 class FormulaModel:
     list_of_functions = {
-        'sqrt': 'np.sqrt',
-        'log': 'np.log',
+        'sqrt': 'np.sqrt()',
+        'ln': 'np.log()',
+        'cos': 'np.cos()',
         '+': '+',
         '*': '*'
     }
+
 
     removables = '()[]{} '
 
@@ -33,9 +36,6 @@ class FormulaModel:
             exec(cmd)
 
        eval(self.formula)
-
-
-
 
 
 

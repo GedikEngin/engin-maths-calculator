@@ -30,6 +30,7 @@ try:
                 (id INTEGER PRIMARY KEY,
                 name VARCHAR(25),
                 desc VARCHAR(255),
+                formula VARCHAR(511),
                 subchapter_id INTEGER,
                 chapter_id INTEGER,
                 module_id INTEGER

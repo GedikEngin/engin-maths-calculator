@@ -1,25 +1,27 @@
 import numpy as np
+from maths.formula import poly_integration
 
 
 class FormulaModel:
     list_of_functions = {
-        'sqrt': 'np.sqrt()',
-        'ln': 'np.log()',
-        'cos': 'np.cos()',
+        'sqrt': 'np.sqrt',
+        'ln': 'np.log',
+        'cos': 'np.cos',
+        'Integrate': 'poly_integration',
         '+': '+',
         '*': '*'
     }
-
 
     removables = '()[]{} '
 
     def __init__(self, formula_text):
         self.formula_text = formula_text
         self.vars = None
+        self.formula = None
 
         print(self.formula_text)
-        self.extract_vars()
         self.convert_formula()
+        self.extract_vars()
 
     def convert_formula(self):
         operators = self.list_of_functions.keys()
@@ -29,13 +31,34 @@ class FormulaModel:
             self.formula = self.formula.replace(op, self.list_of_functions[op])
 
     def evaluate(self, vars):
-        print(vars)
-        for k in vars.keys():
-            cmd = k+'='+vars[k]
-            print(cmd)
-            exec(cmd)
 
-       eval(self.formula)
+        for key in vars:
+            if key == 'A':
+                A=vars[key]
+            elif key =='B':
+                B=vars[key]
+            elif key == 'C':
+                C = vars[key]
+            elif key == 'D':
+                D = vars[key]
+            elif key == 'E':
+                E = vars[key]
+            elif key == 'F':
+                F = vars[key]
+            elif key == 'G':
+                G = vars[key]
+            elif key == 'H':
+                H = vars[key]
+            elif key == 'I':
+                I = vars[key]
+            elif key == 'J':
+                J = vars[key]
+
+
+
+        res = eval(self.formula)
+        print(res)
+        return res
 
 
 
@@ -55,7 +78,8 @@ class FormulaModel:
 
 
 if __name__ == '__main__':
-    f1 = FormulaModel('sqrt(A+b+C) * A')
-    f1.evaluate({'A': '9', 'b': '4', 'C':'2'})
+    f1 = FormulaModel('Integrate(A)')
+    f1.evaluate({'A': '2*x^2'})
 
-
+    f2 = FormulaModel('sqrt(A)')
+    f2.evaluate({'A': 2})

@@ -62,7 +62,7 @@ class FormulaMainView(Frame):
                 variables_dict[var[0]] = var[1]
 
         # https://stackoverflow.com/questions/9623114/check-if-two-unordered-lists-are-equal
-        if set(self.variables) != set(variables_list.keys()):
+        if set(self.variables) != set(variables_dict.keys()):
             print(' Wrong set of variables are provided')
         else:
             print(variables_dict)
@@ -72,6 +72,7 @@ class FormulaMainView(Frame):
 if __name__ == '__main__':
     window = Tk()
     formainv = FormulaMainView(window)
+    formainv.add_new_formula("sqrt(A)", ['A'])
     formainv.pack()
     window.mainloop()
 

@@ -22,7 +22,7 @@ class FormulaMainView(Frame):
         self.variables_text.insert(END, 'Enter item description')
         self.variables_text.pack()
 
-        self.btn_eval = Button(self, relief=RAISED, text='Evaluate Formula', command=self.evaluate)
+        self.btn_eval = Button(self, relief=RAISED, text='Evaluate Formula', command=self._on_evaluate)
         self.btn_eval.pack()
 
     def add_new_formula(self, formula, variables):
@@ -35,8 +35,7 @@ class FormulaMainView(Frame):
         # todo gets the text of formula e.g. (SQRT(A)) and displays it in the text box
         pass
 
-
-    def evaluate(self):
+    def _get_user_values(self):
 
         variables_text = self.variables_text.get("1.0", END)
         variables_text = variables_text.replace(' ', '')
@@ -67,7 +66,12 @@ class FormulaMainView(Frame):
         else:
             print(variables_dict)
 
+
+        return variables_dict
         ### todo let the FC know that user has providded values for evaluation
+
+    def _on_evaluate(self):
+        values = self._get_user_values()
 
 if __name__ == '__main__':
     window = Tk()

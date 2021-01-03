@@ -75,6 +75,8 @@ class FormulaModel:
         text = sorted(set(text))
         self.vars = tuple(text)
 
+        return self.vars
+
 
 
 if __name__ == '__main__':

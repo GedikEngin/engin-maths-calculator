@@ -1,11 +1,13 @@
 from tkinter import *
+from gui.formula_model import FormulaModel
 
 class FormulaMainView(Frame):
 
     def __init__(self, parent): # gui parent not class parent
         super(FormulaMainView, self).__init__(parent)
-        self.formula = None
+        self.formula_text = None
         self.variables = None
+        self.formula = None
 
         self.text_formula = Text(self, width=50, height=10, bg="grey50")
         self.text_formula.insert(END, 'Enter item description')
@@ -25,14 +27,16 @@ class FormulaMainView(Frame):
         self.btn_eval = Button(self, relief=RAISED, text='Evaluate Formula', command=self._on_evaluate)
         self.btn_eval.pack()
 
-    def add_new_formula(self, formula, variables):
-        self.formula = formula
-        self.variables = variables
-        self._set_formula(formula)
+    def add_new_formula(self, formula_text):
+        self.formula_text = formula_text
+        self.formula = FormulaModel(formula_text)
+        self.variables = self.formula.extract_vars()
+        self._show_formula(formula_text)
 
 
-    def _set_formula(self, formula):
+    def _show_formula(self, formula):
         # todo gets the text of formula e.g. (SQRT(A)) and displays it in the text box
+        # todo use the formula parameter passed into the function to display in the gui textbox
         pass
 
     def _get_user_values(self):
@@ -58,7 +62,10 @@ class FormulaMainView(Frame):
             if len(var) < 2:
                 print('Wrong variable provided')
             else:
-                variables_dict[var[0]] = var[1]
+                try:
+                    variables_dict[var[0]] = float(var[1])
+                except ValueError: # youtube --> works with numbers not strings so try except both tutorial
+                    variables_dict[var[0]] = var[1]
 
         # https://stackoverflow.com/questions/9623114/check-if-two-unordered-lists-are-equal
         if set(self.variables) != set(variables_dict.keys()):
@@ -66,18 +73,19 @@ class FormulaMainView(Frame):
         else:
             print(variables_dict)
 
-
         return variables_dict
-        ### todo let the FC know that user has providded values for evaluation
 
     def _on_evaluate(self):
         values = self._get_user_values()
+        self.formula.evaluate(values)
+
+
+
 
 if __name__ == '__main__':
     window = Tk()
     formainv = FormulaMainView(window)
-    formainv.add_new_formula("sqrt(A)", ['A'])
+    formainv.add_new_formula('Integrate(A)')
     formainv.pack()
     window.mainloop()
 
-    # todo formula view and formula creation directly communicate

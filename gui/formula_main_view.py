@@ -9,6 +9,17 @@ class FormulaMainView(Frame):
         self.variables = None
         self.formula = None
 
+        btn_create_formula = Button(self, text="Create", width=25, relief=RAISED, bg="gray50",
+                                    command=self._on_create_formula)
+        btn_create_formula.pack()
+
+        btn_save_formula = Button(self, text="Save", width=25, relief=RAISED, bg="gray50",
+                                    command=self._on_save_formula)
+        btn_save_formula.pack()
+
+        btn_delete_formula = Button(self, text="Delete", width=25, relief=RAISED, bg="gray50",
+                                    command=self._on_delete_formula)
+        btn_delete_formula.pack()
 
         self.text_formula = Text(self, width=50, height=10, bg="grey50")
         self.text_formula.insert(END, 'Formula:')
@@ -110,7 +121,16 @@ class FormulaMainView(Frame):
 
 
     def _on_create_formula(self):
-        print('button')
+        print('create')
+
+
+    def _on_save_formula(self):
+        print('save')
+
+
+    def _on_delete_formula(self):
+        print('delete')
+
 
 if __name__ == '__main__':
     window = Tk()

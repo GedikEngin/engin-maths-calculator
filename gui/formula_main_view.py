@@ -9,8 +9,12 @@ class FormulaMainView(Frame):
         self.variables = None
         self.formula = None
 
+
         self.text_formula = Text(self, width=50, height=10, bg="grey50")
-        self.text_formula.insert(END, 'Enter item description')
+        self.text_formula.insert(END, 'Formula:')
+        self.text_formula.tag_configure("bold", font="Helvetica 12 bold")
+        self.text_formula.tag_configure("normal", font="Helvetica 12")
+        self.text_formula.config(state=DISABLED)
         self.text_formula.pack()
 
 
@@ -21,11 +25,17 @@ class FormulaMainView(Frame):
         left.pack()
 
         self.variables_text = Text(self, width=50, height=10, bg="grey50")
-        self.variables_text.insert(END, 'Enter item description')
+        self.variables_text.insert(END, 'Enter variables and values:')
         self.variables_text.pack()
 
         self.btn_eval = Button(self, relief=RAISED, text='Evaluate Formula', command=self._on_evaluate)
         self.btn_eval.pack()
+
+        self.answer_text = Text(self, width=50, height=10, bg="grey50")
+        self.answer_text.insert(END, 'Answer: \n \n')
+        #todo insert disable feature
+        # get the answer variable and update the textbox
+        self.answer_text.pack()
 
     def add_new_formula(self, formula_text):
         self.formula_text = formula_text
@@ -37,7 +47,14 @@ class FormulaMainView(Frame):
     def _show_formula(self, formula):
         # todo gets the text of formula e.g. (SQRT(A)) and displays it in the text box
         # todo use the formula parameter passed into the function to display in the gui textbox
-        pass
+        # todo use --> _update_formula_textbox()
+
+        self.text_formula.config(state=NORMAL)
+        self.text_formula.delete('1.0', END)
+        self.text_formula.insert(END, 'Formula:'+'\n\n', "bold")
+        self.text_formula.insert(END, '\t' + formula + '\n\n', "normal")
+        self.text_formula.config(state=DISABLED)
+
 
     def _get_user_values(self):
 
@@ -55,12 +72,13 @@ class FormulaMainView(Frame):
         variables_list = cleared_list
 
         ## Put the variables and their assigned values in a dictionary format
-        print(variables_list)
         variables_dict = {}
         for variable in variables_list:
             var = variable.split('=')
             if len(var) < 2:
-                print('Wrong variable provided')
+                self._update_answer_textbox('Wrong variable provided')
+                return False
+                # todo set the value of the text box, it is disabled initially, create a function that is dedicatted to updating the textbox
             else:
                 try:
                     variables_dict[var[0]] = float(var[1])
@@ -69,18 +87,30 @@ class FormulaMainView(Frame):
 
         # https://stackoverflow.com/questions/9623114/check-if-two-unordered-lists-are-equal
         if set(self.variables) != set(variables_dict.keys()):
-            print(' Wrong set of variables are provided')
-        else:
-            print(variables_dict)
+            self._update_answer_textbox('Wrong set of variables are provided')
+            return False
+
 
         return variables_dict
 
     def _on_evaluate(self):
         values = self._get_user_values()
-        self.formula.evaluate(values)
+        if values:
+            answer = str(self.formula.evaluate(values))
+            self._update_answer_textbox(answer)
 
 
 
+    def _update_answer_textbox(self, answer):
+        self.answer_text.config(state=NORMAL)
+        self.answer_text.delete('1.0', END)
+        self.answer_text.insert(END, 'Answer:'+'\n\n', "bold")
+        self.answer_text.insert(END, '\t' + answer + '\n\n', "normal")
+        self.answer_text.config(state=DISABLED)
+
+
+    def _on_create_formula(self):
+        print('button')
 
 if __name__ == '__main__':
     window = Tk()

@@ -19,7 +19,6 @@ class FormulaModel:
         self.vars = None
         self.formula = None
 
-        print(self.formula_text)
         self.convert_formula()
         self.extract_vars()
 
@@ -34,9 +33,9 @@ class FormulaModel:
 
         for key in vars:
             if key == 'A':
-                A=vars[key]
-            elif key =='B':
-                B=vars[key]
+                A = vars[key]
+            elif key == 'B':
+                B = vars[key]
             elif key == 'C':
                 C = vars[key]
             elif key == 'D':
@@ -57,7 +56,6 @@ class FormulaModel:
 
 
         res = eval(self.formula)
-        print(res)
         return res
 
 

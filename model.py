@@ -482,6 +482,27 @@ def get_formula_desc(mod_name, chap_name, subchap_name, formula_name):
     else:
         return None
 
+def get_formula_text(mod_name, chap_name, subchap_name, formula_name):
+
+    subchap_id = get_subchapter_id(mod_name, chap_name,subchap_name)
+    chap_id = get_chapter_id(mod_name, chap_name)
+    mod_id = get_module_id(mod_name)
+
+    c.execute('''
+        SELECT formula
+        FROM formulas
+        WHERE name = ?
+        AND subchapter_id = ?
+        AND chapter_id = ?
+        AND module_id = ?
+        ''', (formula_name, subchap_id, chap_id, mod_id))
+
+    data = c.fetchall()
+    if data:
+        return data[0][0]
+    else:
+        return None
+
 
 
 def get_all_formula_names():
@@ -501,14 +522,15 @@ def add_new_formula(mod_name, chap_name, subchap_name, formula_name, desc):
     :param desc:
     :return: bool -> True: chapter added to the DB, False: chapter already exists
     """
+    formula = '' # the actual formula text will be added by the formula widget
     formula_id = get_formula_id(mod_name, chap_name, subchap_name, formula_name)
     chap_id = get_chapter_id(mod_name, chap_name)
     mod_id = get_module_id(mod_name)
     subchap_id = get_subchapter_id(mod_name, chap_name, subchap_name)
     if formula_id:
         return False
-    c.execute("INSERT INTO formulas (name, desc, chapter_id, module_id, subchapter_id) VALUES (?, ?, ?, ?, ?)",
-              (formula_name, desc, chap_id, mod_id, subchap_id))
+    c.execute("INSERT INTO formulas (name, desc, formula, chapter_id, module_id, subchapter_id) VALUES (?, ?, ?, ?, ?, ?)",
+              (formula_name, desc, formula, chap_id, mod_id, subchap_id)) # formula text will be received later
     conn.commit()
     return True
 
@@ -539,6 +561,18 @@ def remove_existing_formula(mod_name, chap_name, subchap_name, formula_name):
     conn.commit()
     # todo remove all the linked subchapters
 
+def add_formula_text(mod_name, chap_name, subchap_name, formula_name, formula_text):
+
+    formula_id = get_formula_id(mod_name, chap_name, subchap_name, formula_name)
+
+    if not formula_id:
+        return False
+    c.execute("UPDATE formulas"
+              "SET formula = ?"
+              "WHERE id = ?",
+              (formula_text, formula_id))
+
+    conn.commit()
 
 
 

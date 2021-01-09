@@ -5,11 +5,20 @@ from maths.formula import poly_integration
 class FormulaModel:
     list_of_functions = {
         'sqrt': 'np.sqrt',
-        'ln': 'np.log',
-        'cos': 'np.cos',
-        'Integrate': 'poly_integration',
         '+': '+',
-        '*': '*'
+        '*': '*',
+        '^2': '**2',
+        'sin': 'np.sin',
+        'cos': 'np.cos',
+        'tan': 'np.tan',
+        'arcsin': 'np.arcsin',
+        'arcos': 'np.arccos',
+        'arctan': 'np.arctan',
+        '/': '/',
+        '-': '-'
+        # 'ln': 'np.log',
+        # 'Integrate': 'poly_integration',
+        # 'sum5':
     }
 
     removables = '()[]{} '

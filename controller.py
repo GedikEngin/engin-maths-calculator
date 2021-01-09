@@ -1,14 +1,19 @@
 from gui.item_view import *
 from gui.description import *
+from gui.formula_main_view import *
 import model
 
-
+# todo fix appearence globally
+# todo formula main view becomes formula edit view
 
 window = Tk()
-global mv, chv, subchv, descv, formv
+global mv, chv, subchv, descv, formv, feditv
+
+
 # init functions
+
 def _make_widgets():
-    global mv, chv, subchv, descv, formv
+    global mv, chv, subchv, descv, formv, feditv
     mv = HPSListbox(window)
     mv.grid(row=0, column=0)
     mv.subscribe_to_new_item_event(_on_module_new_item)
@@ -36,6 +41,10 @@ def _make_widgets():
 
     descv = Description(window)
     descv.grid(row=0, column=1, rowspan=4)
+
+    feditv = FormulaMainView(window)
+    feditv.grid(row=0, column=2, rowspan=4)
+    feditv.subscribe_to_formula_save(_on_save_formula)
 
 def _load_modules():
     module_names = model.get_all_module_names()
@@ -278,6 +287,7 @@ def _on_formula_removed_item(name):
     model.remove_existing_formula(mod_name, chap_name, subchap_name, formula_name)
 
 def _on_formula_selected_item(formula_name):
+
     mod_name = mv.get_selected_item()
     chap_name = chv.get_selected_item()
     subchap_name = subchv.get_selected_item()
@@ -287,13 +297,44 @@ def _on_formula_selected_item(formula_name):
         return
 
     # todo fomula_names = model.fetch_all_subchapter_formula(mod_name, chap_name, name)
+    # update description
 
     desc = model.get_formula_desc(mod_name, chap_name, subchap_name, formula_name)
     if desc is None:
-        desc = 'Error: Could not find description'
+        desc = 'Error: Could not find the formula'
 
     descv.update_text(desc, formula_name)
+    # update formula_edit_view
+    formula_text = model.get_formula_text(mod_name, chap_name, subchap_name, formula_name)
+    if formula_text == '':
+        formula_text = 'clear'
+    feditv.add_new_formula(formula_text)
 
+
+# formula main view
+
+def _on_save_formula(formula_text):
+
+
+    mod_name = mv.get_selected_item()
+    if mod_name is None:
+        print('NEA: There is no module selection, please select a module before adding a subchapter.')
+        return
+
+    chap_name = chv.get_selected_item()
+    if chap_name is None:
+        print('NEA: There is no chapter selection, please select a chapter before adding a subchapter.')
+        return
+
+    subchap_name = subchv.get_selected_item()
+    if subchap_name is None:
+        print('No subchap selection, please select')
+
+    formula_name = formv.get_selected_item()
+    if subchap_name is None:
+        print('No formula selection, please select')
+
+    model.add_formula_text(mod_name, chap_name, subchap_name, formula_name, formula_text)
 
 
 if __name__ == '__main__':

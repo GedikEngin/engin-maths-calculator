@@ -7,7 +7,7 @@ class FormulaModel:
         'sqrt': 'np.sqrt',
         '+': '+',
         '*': '*',
-        '^2': '**2',
+        '^': '**',
         'sin': 'np.sin',
         'cos': 'np.cos',
         'tan': 'np.tan',
@@ -15,7 +15,8 @@ class FormulaModel:
         'arcos': 'np.arccos',
         'arctan': 'np.arctan',
         '/': '/',
-        '-': '-'
+        '-': '-',
+        'rt(': '**(1/'
         # 'ln': 'np.log',
         # 'Integrate': 'poly_integration',
         # 'sum5':

@@ -28,7 +28,7 @@ class FormulaCreationDialogue(Toplevel):
         ## used
 
         blank_power = PhotoImage(file=r"gui\icons\blank_power.png")
-        btn_blank_power = Button(self, relief=RAISED, image=blank_power, command=lambda: self.update_text("x^()"))
+        btn_blank_power = Button(self, relief=RAISED, image=blank_power, command=lambda: self.update_text("()^()")) # todo redraw the icon to represent the change
         btn_blank_power.image = blank_power
         btn_blank_power.grid(row=1, column=0, padx=2, pady=5)
 
@@ -38,7 +38,7 @@ class FormulaCreationDialogue(Toplevel):
         btn_square_root.grid(row=1, column=1, padx=2, pady=5)
 
         blank_root = PhotoImage(file=r"gui\icons\blank_root.png")
-        btn_blank_root = Button(self, relief=RAISED, image=blank_root, command=lambda: self.update_text("[]rt()"))
+        btn_blank_root = Button(self, relief=RAISED, image=blank_root, command=lambda: self.update_text("()rt()"))
         btn_blank_root.image = blank_root
         btn_blank_root.grid(row=1, column=2, padx=2, pady=5)
 

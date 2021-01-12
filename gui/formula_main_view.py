@@ -116,7 +116,7 @@ class FormulaMainView(Frame):
 
         # https://stackoverflow.com/questions/9623114/check-if-two-unordered-lists-are-equal
         if set(self.variables) != set(variables_dict.keys()):
-            self._update_answer_textbox('Wrong set of variables are provided')
+            self._update_answer_textbox('Wrong set of variables are provided or this function is not implemented')
             return False
 
         return variables_dict

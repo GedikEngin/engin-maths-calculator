@@ -408,7 +408,7 @@ def update_existing_subchapter(old_name, new_name, new_desc):
     '''
     pass
 
-def fetch_all_subchapter_formula(mod_name, chap_name, subchap_name, formula_name):
+def fetch_all_subchapter_formula(mod_name, chap_name, subchap_name):
     '''
     get the id of the subchapter using the name param. that is passed through
     if the subchapter exists:
@@ -423,11 +423,12 @@ def fetch_all_subchapter_formula(mod_name, chap_name, subchap_name, formula_name
     if not subchap_id:
         return []
 
-    c.execute('SELECT name'
-              'FROM formulas'
-              'WHERE subchapter_id = ?',
-              (subchap_id))
+    c.execute('SELECT name FROM formulas WHERE subchapter_id = ?', (subchap_id, ))
+##
 
+    formula_names = c.fetchall()
+    print(formula_names)
+    return [b[0] for b in formula_names]
 
 
 
@@ -567,10 +568,8 @@ def add_formula_text(mod_name, chap_name, subchap_name, formula_name, formula_te
 
     if not formula_id:
         return False
-    c.execute("UPDATE formulas"
-              "SET formula = ?"
-              "WHERE id = ?",
-              (formula_text, formula_id))
+
+    c.execute("UPDATE formulas SET formula = ? WHERE id = ?", (formula_text, formula_id))
 
     conn.commit()
 
@@ -578,4 +577,5 @@ def add_formula_text(mod_name, chap_name, subchap_name, formula_name, formula_te
 
 
 if __name__ == '__main__':
-    remove_existing_module('test')
+    # remove_existing_module('test')
+    add_formula_text(2,2,2, 'root', 'ftext')

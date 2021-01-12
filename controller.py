@@ -136,6 +136,7 @@ def _on_module_selected_item(mod_name):
     chapters = model.fetch_all_module_chapters(mod_name)
     _load_specific_chapters(chapters)
     subchv.clear_list()
+    formv.clear_list()
 
     desc = model.get_module_desc(mod_name)
     if desc is None:
@@ -194,6 +195,7 @@ def _on_chapter_selected_item(chap_name):
 
     descv.update_text(desc, chap_name)
 
+    formv.clear_list()
     subchapter = model.fetch_all_chapter_subchapter(mod_name, chap_name)
     _load_specific_subchapters(subchapter)
 
@@ -245,6 +247,9 @@ def _on_subchapter_selected_item(subchap_name):
         desc = 'Error: Could not find description'
 
     descv.update_text(desc, subchap_name)
+
+    formula = model.fetch_all_subchapter_formula(mod_name, chap_name, subchap_name)
+    _load_specific_formulas(formula)
 
 
 # formula

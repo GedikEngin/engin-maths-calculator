@@ -1,0 +1,59 @@
+dbdiagram.io
+normalised:
+
+Table modules {
+  id int [pk, increment] // auto-increment
+  name varchar
+  desc varchar
+}
+
+Table chapters {
+  id int [pk, increment] // auto-increment
+  name varchar
+  desc varchar
+  module_id integar
+}
+
+Ref: modules.id > chapters.module_id
+
+Table subchapters {
+  id int [pk, increment] // auto-increment
+  name varchar
+  desc varchar
+  chapter_id integar
+  module_id integar
+}
+
+Ref: chapters.id > subchapters.chapter_id
+Ref: chapters.module_id > subchapters.module_id
+
+Table formulas {
+  id int [pk, increment] // auto-increment
+  name varchar
+  desc varchar
+  subchapter_id integar
+  chapter_id integar
+  module_id integar
+}
+
+Ref: subchapters.module_id > formulas.module_id
+Ref: subchapters.chapter_id > formulas.chapter_id
+Ref: subchapters.id > formulas.subchapter_id
+
+prenormalised:
+
+table formula {
+  module_name varchar
+  module_desc varchar
+  module_id integar
+  chapter_name varchar
+  chapter_desc varchar
+  chapter_id integar
+  subchapter_name varchar
+  subchapter_desc varchar
+  subchapter_id integar
+  fomrula_name varchar
+  formula_desc varchar
+  formula_main varchar
+  formula_id integar [pk, increment]
+}

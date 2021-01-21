@@ -6,34 +6,34 @@ conn = sqlite3.connect('Mathematics_database.db')
 c = conn.cursor()
 try:
     c.execute('''CREATE TABLE IF NOT EXISTS modules
-                (id INTEGER PRIMARY KEY,
-                 name VARCHAR(25),
-                 desc VARCHAR(255)
+                (id INTEGER PRIMARY KEY NOT NULL,
+                 name VARCHAR(25) NOT NULL,
+                 desc VARCHAR(255) NOT NULL
                  )''')
 
     c.execute('''CREATE TABLE IF NOT EXISTS chapters
-                (id INTEGER PRIMARY KEY,
-                name VARCHAR(25),
-                desc VARCHAR(255),
-                module_id INTEGER
+                (id INTEGER PRIMARY KEY NOT NULL,
+                name VARCHAR(25) NOT NULL,
+                desc VARCHAR(255) NOT NULL,
+                module_id INTEGER NOT NULL
                 )''')
 
     c.execute('''CREATE TABLE IF NOT EXISTS subchapters
-                (id INTEGER PRIMARY KEY,
-                name VARCHAR(25),
-                desc VARCHAR(255),
-                chapter_id INTEGER,
-                module_id INTEGER
+                (id INTEGER PRIMARY KEY NOT NULL,
+                name VARCHAR(25) NOT NULL,
+                desc VARCHAR(255) NOT NULL,
+                chapter_id INTEGER NOT NULL,
+                module_id INTEGER NOT NULL
                 )''')
 
     c.execute('''CREATE TABLE IF NOT EXISTS formulas
-                (id INTEGER PRIMARY KEY,
-                name VARCHAR(25),
-                desc VARCHAR(255),
-                formula VARCHAR(511),
-                subchapter_id INTEGER,
-                chapter_id INTEGER,
-                module_id INTEGER
+                (id INTEGER PRIMARY KEY NOT NULL,
+                name VARCHAR(25) NOT NULL,
+                desc VARCHAR(255) NOT NULL,
+                formula VARCHAR(511) NOT NULL,
+                subchapter_id INTEGER NOT NULL,
+                chapter_id INTEGER NOT NULL,
+                module_id INTEGER NOT NULL
                 )''')
 except:
     pass

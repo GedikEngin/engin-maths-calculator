@@ -50,7 +50,7 @@ class AddNewItemDialogue(Toplevel):
         return self.return_variable
 
 
-class HPSListbox(Frame):
+class HPSListbox(LabelFrame): # footnote change in design chapter
 
     def __init__(self, higher_gui, *args, **kwargs):
         super().__init__(higher_gui, *args, **kwargs)

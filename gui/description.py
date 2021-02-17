@@ -1,10 +1,10 @@
 from tkinter import *
 
-class Description(Frame):
+class Description(LabelFrame):
 
-    def __init__(self, parent):
+    def __init__(self, parent, text=''):
 
-        super(Description, self).__init__(parent)
+        super(Description, self).__init__(parent, text=text) #possibly mention inheritence in design -- gui parent
 
         self.sv_item_desc = StringVar()
         self.text_item_desc = Text(self, width=50, height=58, bg="grey50")

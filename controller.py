@@ -3,7 +3,7 @@ from gui.description import *
 from gui.formula_main_view import *
 import model
 
-# todo fix appearence globally
+# todo fix appearance globally
 # todo formula main view becomes formula edit view
 
 window = Tk()
@@ -13,36 +13,36 @@ global mv, chv, subchv, descv, formv, feditv
 # init functions
 
 def _make_widgets():
-    global mv, chv, subchv, descv, formv, feditv
-    mv = HPSListbox(window)
+    global mv, chv, subchv, descv, formv, feditv # GUI Frame
+    mv = HPSListbox(window, text='Modules')
     mv.grid(row=0, column=0)
     mv.subscribe_to_new_item_event(_on_module_new_item)
     mv.subscribe_to_removed_item_event(_on_module_removed_item)
     mv.subscribe_to_update_item_event(_on_module_updated_item)
     mv.subscribe_to_select_item_event(_on_module_selected_item)
 
-    chv = HPSListbox(window)
+    chv = HPSListbox(window, text='Chapters')
     chv.grid(row=1, column=0)
     chv.subscribe_to_new_item_event(_on_chapter_new_item)
     chv.subscribe_to_removed_item_event(_on_chapter_removed_item)
     chv.subscribe_to_select_item_event(_on_chapter_selected_item)
 
-    subchv = HPSListbox(window)
+    subchv = HPSListbox(window, text='Subchapters')
     subchv.grid(row=2, column=0)
     subchv.subscribe_to_new_item_event(_on_subchapter_new_item)
     subchv.subscribe_to_removed_item_event(_on_subchapter_removed_item)
     subchv.subscribe_to_select_item_event(_on_subchapter_selected_item)
 
-    formv = HPSListbox(window)
+    formv = HPSListbox(window, text='Formulas')
     formv.grid(row=3, column=0)
     formv.subscribe_to_new_item_event(_on_formula_new_item)
     formv.subscribe_to_removed_item_event(_on_formula_removed_item)
     formv.subscribe_to_select_item_event(_on_formula_selected_item)
 
-    descv = Description(window)
+    descv = Description(window, text='Description')
     descv.grid(row=0, column=1, rowspan=4)
 
-    feditv = FormulaMainView(window)
+    feditv = FormulaMainView(window, text='Formula Control')
     feditv.grid(row=0, column=2, rowspan=4)
     feditv.subscribe_to_formula_save(_on_save_formula)
 

@@ -4,10 +4,10 @@ from gui.formula_creation import FormulaCreationDialogue
 
 # todo change pack into grid
 
-class FormulaMainView(Frame):
+class FormulaMainView(LabelFrame):
 
-    def __init__(self, parent):  # gui parent not class parent
-        super(FormulaMainView, self).__init__(parent)
+    def __init__(self, parent, text=''):  # gui parent not class parent
+        super(FormulaMainView, self).__init__(parent, text=text)
         self.formula_text = None
         self.variables = None
         self.formula = None

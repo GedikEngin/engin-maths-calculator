@@ -14,7 +14,7 @@ global mv, chv, subchv, descv, formv, feditv
 
 def _make_widgets():
     global mv, chv, subchv, descv, formv, feditv # GUI Frame
-    mv = HPSListbox(window, text='Modules')
+    mv = HPSListbox(window, text='Modules') # use hps to get to size and alter frame height
     mv.grid(row=0, column=0)
     mv.subscribe_to_new_item_event(_on_module_new_item)
     mv.subscribe_to_removed_item_event(_on_module_removed_item)

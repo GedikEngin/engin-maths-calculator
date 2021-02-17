@@ -116,7 +116,7 @@ class HPSListbox(LabelFrame): # footnote change in design chapter
 
         # listbox
 
-        self.listbox = Listbox(self, height=10,
+        self.listbox = Listbox(self, height=8,
                                  bg="gray",
                                  activestyle='dotbox',
                                  font="Helvetica",

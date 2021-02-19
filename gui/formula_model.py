@@ -2,21 +2,22 @@ import numpy as np
 from maths.formula import poly_integration
 
 
+
 class FormulaModel:
     list_of_functions = {
         'sqrt': 'np.sqrt',
         '+': '+',
         '*': '*',
         '^': '**',
-        'sin': 'np.sin',
-        'cos': 'np.cos',
-        'tan': 'np.tan',
-        'arcsin': 'np.arcsin',
-        'arcos': 'np.arccos',
-        'arctan': 'np.arctan',
+        'sine(': 'np.sin(',
+        'cosine(': 'np.cos(',
+        'tangent(': 'np.tan(',
+        'arcsin(': 'np.arcsin(',
+        'arccos(': 'np.arccos(',
+        'arctan(': 'np.arctan(',
         '/': '/',
         '-': '-',
-        'rt(': '**(1/'
+        'blnkrt(': '**(1/'
         # 'ln': 'np.log',
         # 'Integrate': 'poly_integration',
         # 'sum5':
@@ -62,6 +63,7 @@ class FormulaModel:
                 I = vars[key]
             elif key == 'J':
                 J = vars[key]
+
 
 
 

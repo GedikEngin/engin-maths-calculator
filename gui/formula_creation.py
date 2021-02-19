@@ -38,7 +38,7 @@ class FormulaCreationDialogue(Toplevel):
         btn_square_root.grid(row=1, column=1, padx=2, pady=5)
 
         blank_root = PhotoImage(file=r"gui\icons\blank_root.png")
-        btn_blank_root = Button(self, relief=RAISED, image=blank_root, command=lambda: self.update_text("()rt()"))
+        btn_blank_root = Button(self, relief=RAISED, image=blank_root, command=lambda: self.update_text("()blnkrt()"))
         btn_blank_root.image = blank_root
         btn_blank_root.grid(row=1, column=2, padx=2, pady=5)
 
@@ -58,17 +58,17 @@ class FormulaCreationDialogue(Toplevel):
         btn_multiplication.grid(row=3, column=2, padx=2, pady=5)
 
         sin = PhotoImage(file=r"gui\icons\sin.png")
-        btn_sin = Button(self, relief=RAISED, image=sin, command=lambda: self.update_text("sin()"))
+        btn_sin = Button(self, relief=RAISED, image=sin, command=lambda: self.update_text("sine()"))
         btn_sin.image = sin
         btn_sin.grid(row=4, column=0, padx=2, pady=5)
 
         cos = PhotoImage(file=r"gui\icons\cos.png")
-        btn_cos = Button(self, relief=RAISED, image=cos, command=lambda: self.update_text("cos()"))
+        btn_cos = Button(self, relief=RAISED, image=cos, command=lambda: self.update_text("cosine()"))
         btn_cos.image = cos
         btn_cos.grid(row=4, column=1, padx=2, pady=5)
 
         tan = PhotoImage(file=r"gui\icons\tan.png")
-        btn_tan = Button(self, relief=RAISED, image=tan, command=lambda: self.update_text("tan(tan"))
+        btn_tan = Button(self, relief=RAISED, image=tan, command=lambda: self.update_text("tan(tanget"))
         btn_tan.image = tan
         btn_tan.grid(row=4, column=2, padx=2, pady=5)
 

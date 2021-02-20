@@ -149,11 +149,15 @@ def _on_module_selected_item(mod_name):
 
 
 def _on_module_updated_item(old_name, new_name, new_desc):
-    print('Controller received module name and desc', old_name, new_name, new_desc)
-    # todo
-    # story:
-    # when updated the items name and description are updated only, all the links remain the same
-    # the display in the list box and description will change to match the updated item
+    print('Controller received subchapter name and desc', old_name, new_name, new_desc)
+    mod_name = old_name
+    if mod_name is None:
+        print('NEA: There is no module selection, please select a module before editing.')
+    model.update_modules_name_and_desc(old_name, new_name, new_desc)
+
+
+
+# Chapter View
 
 def _on_chapter_new_item(name, desc):
     print('Controller received chapter name and desc', name, desc)
@@ -172,7 +176,6 @@ def _on_chapter_new_item(name, desc):
         chv.delete_item_by_name(name)
         print('An error is present: \n Check if the chapter is already present within the database')
         print('The added item has been deleted')
-# Chapter View
 
 
 def _on_chapter_removed_item(name):
@@ -203,7 +206,12 @@ def _on_chapter_selected_item(chap_name):
     _load_specific_subchapters(subchapter)
 
 def _on_chapter_updated_item(old_name, new_name, new_desc):
-    print('Controller received chapter name and desc', old_name, new_name, new_desc)
+    print('Controller received subchapter name and desc', old_name, new_name, new_desc)
+    chap_name = old_name
+    mod_name = mv.get_selected_item()
+    if mod_name is None or chap_name is None:
+        print('NEA: There is no chapter selection, please select a module before editing a formula.')
+    model.update_chapters_name_and_desc(mod_name, old_name, new_name, new_desc)
 
 
 # Sub chapter View
@@ -257,7 +265,13 @@ def _on_subchapter_selected_item(subchap_name):
     _load_specific_formulas(formula)
 
 def _on_subchapter_updated_item(old_name, new_name, new_desc):
-    print('Controller received module name and desc', old_name, new_name, new_desc)
+    print('Controller received subchapter name and desc', old_name, new_name, new_desc)
+    subchap_name = old_name
+    mod_name = mv.get_selected_item()
+    chap_name = chv.get_selected_item()
+    if mod_name is None or chap_name is None or subchap_name is None:
+        print('NEA: There is no subchapter selection, please select a chapter before editing a subchapter.')
+    model.update_subchapters_name_and_desc(mod_name, chap_name, old_name, new_name, new_desc)
 
 
 # formula

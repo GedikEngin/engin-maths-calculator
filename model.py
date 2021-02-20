@@ -127,24 +127,6 @@ def remove_existing_module(name):
     conn.commit()
 
 
-def update_existing_module(old_name, new_name, new_desc):
-    '''
-    see if the new name is the same as the old name
-    if it isnt, search database to see if new name exists within the database
-    if it doesnt:
-        find old name and old name and desc
-        delete the old desc
-        amend the new name into old name
-    if it exists:
-        return false, as you cannot change a new name into an existing one
-
-    :param name:
-    :param desc:
-    :return: if new name exists, return false, if doesnt return true
-    '''
-    pass
-
-
 def fetch_all_module_chapters(mod_name):
     '''
     get the id of the module using the name param. that is passed through
@@ -165,6 +147,23 @@ def fetch_all_module_chapters(mod_name):
     print(chapters)
     return [b[0] for b in chapters]
 
+def update_modules_name_and_desc(old_name, new_name, new_desc):
+
+    mod_id = get_module_id(old_name)
+    if not new_name and new_desc is None:
+        return False
+
+    elif not new_name:
+        c.execute("UPDATE modules SET desc = ? WHERE id = ?", (new_desc, mod_id))
+
+    elif new_desc is None:
+        c.execute("UPDATE modules SET name = ? WHERE id = ?", (new_name, mod_id))
+
+    else:
+        c.execute("UPDATE modules SET name = ?, desc = ? WHERE id = ?", (new_name, new_desc, mod_id))
+
+    conn.commit()
+    return True
 
 
 # chapter
@@ -252,23 +251,6 @@ def get_chapter_desc(mod_name, chap_name):
         return None
 
 
-def update_existing_chapter(old_name, new_name, new_desc):
-    '''
-    see if the new name is the same as the old name
-    if it isnt, search database to see if new name exists within the database
-    if it doesnt:
-        find old name and old name and desc
-        delete the old desc
-        amend the new name into old name
-    if it exists:
-        return false, as you cannot change a new name into an existing one
-
-    :param name:
-    :param desc:
-    :return: if new name exists, return false, if doesnt return true
-    '''
-    pass
-
 def fetch_all_chapter_subchapter(mod_name, chap_name):
     '''
     get the id of the chapter using the name param. that is passed through
@@ -288,6 +270,24 @@ def fetch_all_chapter_subchapter(mod_name, chap_name):
     subchapter = c.fetchall()
     print(subchapter)
     return [b[0] for b in subchapter]
+
+def update_chapters_name_and_desc(mod_name, old_name, new_name, new_desc):
+
+    chap_id = get_chapter_id(mod_name, old_name)
+    if not new_name and new_desc is None:
+        return False
+
+    elif not new_name:
+        c.execute("UPDATE chapters SET desc = ? WHERE id = ?", (new_desc, chap_id))
+
+    elif new_desc is None:
+        c.execute("UPDATE chapters SET name = ? WHERE id = ?", (new_name, chap_id))
+
+    else:
+        c.execute("UPDATE chapters SET name = ?, desc = ? WHERE id = ?", (new_name, new_desc, chap_id))
+
+    conn.commit()
+    return True
 
 
 # subchapter
@@ -391,22 +391,6 @@ def remove_existing_subchapter(mod_name, chapter_name, subchapter_name):
     conn.commit()
     # todo remove all the linked subchapters
 
-def update_existing_subchapter(old_name, new_name, new_desc):
-    '''
-    see if the new name is the same as the old name
-    if it isnt, search database to see if new name exists within the database
-    if it doesnt:
-        find old name and old name and desc
-        delete the old desc
-        amend the new name into old name
-    if it exists:
-        return false, as you cannot change a new name into an existing one
-
-    :param name:
-    :param desc:
-    :return: if new name exists, return false, if doesnt return true
-    '''
-    pass
 
 def fetch_all_subchapter_formula(mod_name, chap_name, subchap_name):
     '''
@@ -429,6 +413,24 @@ def fetch_all_subchapter_formula(mod_name, chap_name, subchap_name):
     formula_names = c.fetchall()
     print(formula_names)
     return [b[0] for b in formula_names]
+
+def update_subchapters_name_and_desc(mod_name, chap_name, old_name, new_name, new_desc):
+
+    subchap_id = get_subchapter_id(mod_name, chap_name, old_name)
+    if not new_name and new_desc is None:
+        return False
+
+    elif not new_name:
+        c.execute("UPDATE subchapters SET desc = ? WHERE id = ?", (new_desc, subchap_id))
+
+    elif new_desc is None:
+        c.execute("UPDATE subchapters SET name = ? WHERE id = ?", (new_name, subchap_id))
+
+    else:
+        c.execute("UPDATE subchapters SET name = ?, desc = ? WHERE id = ?", (new_name, new_desc, subchap_id))
+
+    conn.commit()
+    return True
 
 
 
@@ -575,9 +577,6 @@ def add_formula_text(mod_name, chap_name, subchap_name, formula_name, formula_te
 
 def update_formula_name_and_desc(mod_name, chap_name, subchap_name, old_name, new_name, new_desc):
 
-    mod_id = get_module_id(mod_name)
-    chap_id = get_chapter_id(mod_name, chap_name)
-    subchap_id = get_subchapter_id(mod_name, chap_name, subchap_name)
     formula_id = get_formula_id(mod_name, chap_name, subchap_name, old_name)
     if not new_name and new_desc is None:
         return False

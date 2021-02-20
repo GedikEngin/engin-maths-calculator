@@ -351,6 +351,14 @@ def _on_save_formula(formula_text):
 
 def _on_formula_updated_item(old_name, new_name, new_desc):
     print('Controller received module name and desc', old_name, new_name, new_desc)
+    formula_name = old_name
+    mod_name = mv.get_selected_item()
+    chap_name = chv.get_selected_item()
+    subchap_name = subchv.get_selected_item()
+    if formula_name is None or mod_name is None or chap_name is None or subchap_name is None:
+        print('NEA: There is no formula selection, please select a subchapter before editing a formula.')
+    model.update_formula_name_and_desc(mod_name, chap_name, subchap_name, old_name, new_name, new_desc)
+
 
 
 if __name__ == '__main__':

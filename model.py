@@ -573,7 +573,26 @@ def add_formula_text(mod_name, chap_name, subchap_name, formula_name, formula_te
 
     conn.commit()
 
+def update_formula_name_and_desc(mod_name, chap_name, subchap_name, old_name, new_name, new_desc):
 
+    mod_id = get_module_id(mod_name)
+    chap_id = get_chapter_id(mod_name, chap_name)
+    subchap_id = get_subchapter_id(mod_name, chap_name, subchap_name)
+    formula_id = get_formula_id(mod_name, chap_name, subchap_name, old_name)
+    if not new_name and new_desc is None:
+        return False
+
+    elif not new_name:
+        c.execute("UPDATE formulas SET desc = ? WHERE id = ?", (new_desc, formula_id))
+
+    elif new_desc is None:
+        c.execute("UPDATE formulas SET name = ? WHERE id = ?", (new_name, formula_id))
+
+    else:
+        c.execute("UPDATE formulas SET name = ?, desc = ? WHERE id = ?", (new_name, new_desc, formula_id))
+
+    conn.commit()
+    return True
 
 
 if __name__ == '__main__':

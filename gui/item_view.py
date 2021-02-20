@@ -135,10 +135,38 @@ class HPSListbox(LabelFrame): # footnote change in design chapter
         btn_remove_module = Button(self, text="-", width=16, relief=RAISED, command=self._on_remove_button_pressed)
         btn_remove_module.grid(row=1, column=1, padx=2, pady=5)
 
-        btn_edit_module = Button(self, text="~", width=16, relief=RAISED)
+        btn_edit_module = Button(self, text="~", width=16, relief=RAISED, command=self._on_edit_button_pressed)
         btn_edit_module.grid(row=1, column=2, padx=2, pady=5)
 
     # on trigger
+    def _on_edit_button_pressed(self):
+        new_item_name_and_description = AddNewItemDialogue(self).show()
+        print(new_item_name_and_description)
+        if new_item_name_and_description:
+            new_name = new_item_name_and_description[0]
+            new_desc = new_item_name_and_description[1]
+
+            idx = self.listbox.curselection()
+            old_name = self.listbox.get(idx)
+
+            if new_name:
+                # First remove the existing selected item
+                if idx:
+                    self._remove_items_from_list(idx)
+                # Then add the edited name to the list box
+                self._add_items_to_list(new_name)
+                # Notify the controller about the change
+            else:
+                new_name = None
+
+            if new_desc == 'Enter item description':
+                new_desc = None
+
+            for command in self._update_item_callbacks:
+                # command
+                command(old_name, new_name, new_desc)
+                # self.subscribe_to_update_item_event(command)
+
     def _on_add_button_pressed(self):
         new_item_name_and_description = AddNewItemDialogue(self).show()
         if new_item_name_and_description:

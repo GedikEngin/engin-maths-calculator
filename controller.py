@@ -18,26 +18,29 @@ def _make_widgets():
     mv.grid(row=0, column=0)
     mv.subscribe_to_new_item_event(_on_module_new_item)
     mv.subscribe_to_removed_item_event(_on_module_removed_item)
-    mv.subscribe_to_update_item_event(_on_module_updated_item)
     mv.subscribe_to_select_item_event(_on_module_selected_item)
+    mv.subscribe_to_update_item_event(_on_module_updated_item)
 
     chv = HPSListbox(window, text='Chapters')
     chv.grid(row=1, column=0)
     chv.subscribe_to_new_item_event(_on_chapter_new_item)
     chv.subscribe_to_removed_item_event(_on_chapter_removed_item)
     chv.subscribe_to_select_item_event(_on_chapter_selected_item)
+    chv.subscribe_to_update_item_event(_on_chapter_updated_item)
 
     subchv = HPSListbox(window, text='Subchapters')
     subchv.grid(row=2, column=0)
     subchv.subscribe_to_new_item_event(_on_subchapter_new_item)
     subchv.subscribe_to_removed_item_event(_on_subchapter_removed_item)
     subchv.subscribe_to_select_item_event(_on_subchapter_selected_item)
+    subchv.subscribe_to_update_item_event(_on_subchapter_updated_item)
 
     formv = HPSListbox(window, text='Formulas')
     formv.grid(row=3, column=0)
     formv.subscribe_to_new_item_event(_on_formula_new_item)
     formv.subscribe_to_removed_item_event(_on_formula_removed_item)
     formv.subscribe_to_select_item_event(_on_formula_selected_item)
+    formv.subscribe_to_update_item_event(_on_formula_updated_item)
 
     descv = Description(window, text='Description')
     descv.grid(row=0, column=1, rowspan=4)
@@ -123,14 +126,6 @@ def _on_module_removed_item(name):
     # the selection will go to a default, pre-existing item
 
 
-def _on_module_updated_item(name, desc):
-    print('Controller received module name and desc', name, desc)
-    # todo
-    # story:
-    # when updated the items name and description are updated only, all the links remain the same
-    # the display in the list box and description will change to match the updated item
-
-
 def _on_module_selected_item(mod_name):
     print('Controller received module name', mod_name)
     chapters = model.fetch_all_module_chapters(mod_name)
@@ -152,7 +147,14 @@ def _on_module_selected_item(mod_name):
     # the first chapter is auto selected
     # {for chapters} ^^ the controller also retrieves the linked subchapters
 
-# Chapter View
+
+def _on_module_updated_item(old_name, new_name, new_desc):
+    print('Controller received module name and desc', old_name, new_name, new_desc)
+    # todo
+    # story:
+    # when updated the items name and description are updated only, all the links remain the same
+    # the display in the list box and description will change to match the updated item
+
 def _on_chapter_new_item(name, desc):
     print('Controller received chapter name and desc', name, desc)
 
@@ -170,6 +172,7 @@ def _on_chapter_new_item(name, desc):
         chv.delete_item_by_name(name)
         print('An error is present: \n Check if the chapter is already present within the database')
         print('The added item has been deleted')
+# Chapter View
 
 
 def _on_chapter_removed_item(name):
@@ -199,6 +202,8 @@ def _on_chapter_selected_item(chap_name):
     subchapter = model.fetch_all_chapter_subchapter(mod_name, chap_name)
     _load_specific_subchapters(subchapter)
 
+def _on_chapter_updated_item(old_name, new_name, new_desc):
+    print('Controller received chapter name and desc', old_name, new_name, new_desc)
 
 
 # Sub chapter View
@@ -250,6 +255,9 @@ def _on_subchapter_selected_item(subchap_name):
 
     formula = model.fetch_all_subchapter_formula(mod_name, chap_name, subchap_name)
     _load_specific_formulas(formula)
+
+def _on_subchapter_updated_item(old_name, new_name, new_desc):
+    print('Controller received module name and desc', old_name, new_name, new_desc)
 
 
 # formula
@@ -340,6 +348,9 @@ def _on_save_formula(formula_text):
         print('No formula selection, please select')
 
     model.add_formula_text(mod_name, chap_name, subchap_name, formula_name, formula_text)
+
+def _on_formula_updated_item(old_name, new_name, new_desc):
+    print('Controller received module name and desc', old_name, new_name, new_desc)
 
 
 if __name__ == '__main__':

@@ -252,6 +252,7 @@ class FormulaCreationDialogue(Toplevel):
 
     def update_text(self, btn_text):
         print(btn_text)
+        # idx = self.text_item_desc.curselection()
         self.text_item_desc.insert(END, btn_text)
 
     def help_box(self):

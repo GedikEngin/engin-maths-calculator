@@ -124,6 +124,9 @@ def remove_existing_module(name):
     c.execute("DELETE "
               "FROM subchapters WHERE module_id = ?", (mod_id,))
 
+    c.execute("DELETE "
+              "FROM formulas WHERE module_id = ?", (mod_id,))
+
     conn.commit()
 
 
@@ -230,6 +233,9 @@ def remove_existing_chapter(name, module_name):
 
     c.execute("DELETE "
               "FROM subchapters WHERE chapter_id = ?", (chap_id,))
+
+    c.execute("DELETE "
+              "FROM formulas WHERE chapter_id = ?", (chap_id,))
     conn.commit()
     # todo remove all the linked subchapters
 

@@ -4,14 +4,12 @@ from tkinter import *
 class FormulaCreationDialogue(Toplevel):
 
     def __init__(self, parent):
-
         Toplevel.__init__(self, parent)
         self.return_variable = None
 
         # formula
         self.text_item_desc = Text(self, width=80, height=15, bg="grey50")
-        self.text_item_desc.grid(row=0, column=0, padx=2, pady=5, columnspan = 7)
-
+        self.text_item_desc.grid(row=0, column=0, padx=2, pady=5, columnspan=7)
 
         # buttons
 
@@ -28,7 +26,8 @@ class FormulaCreationDialogue(Toplevel):
         ## used
 
         blank_power = PhotoImage(file=r"gui\icons\blank_power.png")
-        btn_blank_power = Button(self, relief=RAISED, image=blank_power, command=lambda: self.update_text("()^()")) # todo redraw the icon to represent the change
+        btn_blank_power = Button(self, relief=RAISED, image=blank_power, command=lambda: self.update_text(
+            "()^()"))  # todo redraw the icon to represent the change
         btn_blank_power.image = blank_power
         btn_blank_power.grid(row=1, column=0, padx=2, pady=5)
 
@@ -249,7 +248,6 @@ class FormulaCreationDialogue(Toplevel):
         # btn_squaring.image = squaring
         # btn_squaring.grid(row=1, column=0, padx=2, pady=5)
 
-
     def update_text(self, btn_text):
         print(btn_text)
         # idx = self.text_item_desc.curselection()
@@ -267,11 +265,11 @@ class FormulaCreationDialogue(Toplevel):
         self.destroy()
 
     def show(self):
-
-        self.wm_deiconify() # they freeze and stop the code
-        self.grab_set() # they freeze and stop the code
-        self.wait_window() # it blocks the code, prevents the code from moving onto the next lin
+        self.wm_deiconify()  # they freeze and stop the code
+        self.grab_set()  # they freeze and stop the code
+        self.wait_window()  # it blocks the code, prevents the code from moving onto the next lin
         return self.return_variable
+
 
 if __name__ == '__main__':
     window = Tk()
@@ -279,4 +277,3 @@ if __name__ == '__main__':
     new_item_name_and_description = FormulaCreationDialogue(window).show()
 
     window.mainloop()
-

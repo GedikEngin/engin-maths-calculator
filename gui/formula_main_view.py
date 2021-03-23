@@ -1,6 +1,8 @@
 from tkinter import *
 from gui.formula_model import FormulaModel
 from gui.formula_creation import FormulaCreationDialogue
+import reverse_polish_notation_converter as rpn
+
 
 # todo change pack into grid
 
@@ -53,14 +55,18 @@ class FormulaMainView(LabelFrame):
         self.answer_text.config(state=DISABLED)
         self.answer_text.pack()
 
+        self.rpn_text = Text(self, width=50, height=10, bg="grey50")
+        self.rpn_text.tag_configure("bold", font="Helvetica 12 bold")
+        self.rpn_text.tag_configure("normal", font="Helvetica 12")
+        self.rpn_text.insert(END, 'RPN:', "bold")
+        self.rpn_text.config(state=DISABLED)
+        self.rpn_text.pack()
 
     def subscribe_to_formula_save(self, subscriber):
         self.formula_save_subscribers.append(subscriber)
 
-
     def subscribe_to_formula_delete(self, subscribers):
         self.formula_delete_subscribers.append(subscribers)
-
 
     def add_new_formula(self, formula_text):
         if formula_text == 'clear':
@@ -77,7 +83,6 @@ class FormulaMainView(LabelFrame):
         self._show_formula(formula_text)
 
     def _show_formula(self, formula):
-
 
         self.text_formula.config(state=NORMAL)
         self.text_formula.delete('1.0', END)
@@ -134,21 +139,28 @@ class FormulaMainView(LabelFrame):
         self.answer_text.insert(END, '\t' + answer + '\n\n', "normal")
         self.answer_text.config(state=DISABLED)
 
+    def _update_rpn_textbox(self, formula_text):
+        self.answer_text.config(state=NORMAL)
+        self.answer_text.delete('1.0', END)
+        self.answer_text.insert(END, 'RPN:' + '\n\n', "bold")
+        rpn_text = rpn.string_to_rpn(formula_text)
+        self.answer_text.insert(END, '\t' + rpn_text + '\n\n', "normal")
+        self.answer_text.config(state=DISABLED)
+
     def _on_create_formula(self):
         formula_text = FormulaCreationDialogue(self).show()
         if formula_text is not None:
             self.add_new_formula(formula_text)
+            self._update_rpn_textbox(formula_text)
 
     def _on_save_formula(self):
         for subscriber in self.formula_save_subscribers:
             subscriber(self.formula_text)
 
-
     def _on_delete_formula(self):
         print('delete')
         for subscriber in self.formula_delete_subscribers:
             subscriber(self.formula_text)
-
 
 
 if __name__ == '__main__':
@@ -157,4 +169,3 @@ if __name__ == '__main__':
     formainv.add_new_formula('Integrate(A)')
     formainv.pack()
     window.mainloop()
-

@@ -2,7 +2,6 @@ import numpy as np
 from maths.formula import poly_integration
 
 
-
 class FormulaModel:
     list_of_functions = {
         'sqrt': 'np.sqrt',
@@ -63,8 +62,6 @@ class FormulaModel:
                 I = vars[key]
             elif key == 'J':
                 J = vars[key]
-
-
 
 
         res = eval(self.formula)

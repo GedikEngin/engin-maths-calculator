@@ -1,29 +1,19 @@
-# rpn stack integrated
 import stack
 
-if __name__ == '__main__':
-
-    # key assignments
-    formula = '(3 * (6 + 2) - 4) / (3 + 7)'
+def string_to_rpn(formula):
+    main_stack = stack.StackClass()
     operators = ['*', '+', '/', '-']
-    brackets = ['(', ')']
     rpn = ''
 
-    # stack
-    main_stack = stack.StackClass()
-
-    # main code
     for char in formula:
         if char == '':
             continue
-        print(char, '-=-=-=-')
         if char in operators or char == '(':
             main_stack.push_stack(char)
         elif char == ')':
             operator = main_stack.pop_stack()
             while operator != '(':
                 rpn += operator
-                print('op in while loop', operator)
                 operator = main_stack.pop_stack()
 
             if main_stack:
@@ -34,6 +24,11 @@ if __name__ == '__main__':
 
         else:
             rpn += char
-            print('final else rpn', rpn)
 
-    print('end -=-=-=-', rpn)
+    print('rpn:', rpn)
+
+
+if __name__ == '__main__':
+
+    formula = '(A*(A+2)-C)/(3+7)'
+    string_to_rpn(formula)

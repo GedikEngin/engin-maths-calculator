@@ -79,7 +79,8 @@ class FormulaMainView(LabelFrame):
 
         self.formula_text = formula_text
         self.formula = FormulaModel(formula_text)
-        self.variables = self.formula.extract_vars()
+        self._update_rpn_textbox(self.formula.get_rpn())
+        # self.variables = self.formula.extract_vars()
         self._show_formula(formula_text)
 
     def _show_formula(self, formula):
@@ -139,19 +140,19 @@ class FormulaMainView(LabelFrame):
         self.answer_text.insert(END, '\t' + answer + '\n\n', "normal")
         self.answer_text.config(state=DISABLED)
 
-    def _update_rpn_textbox(self, formula_text):
-        self.answer_text.config(state=NORMAL)
-        self.answer_text.delete('1.0', END)
-        self.answer_text.insert(END, 'RPN:' + '\n\n', "bold")
-        rpn_text = rpn.string_to_rpn(formula_text)
-        self.answer_text.insert(END, '\t' + rpn_text + '\n\n', "normal")
-        self.answer_text.config(state=DISABLED)
+    def _update_rpn_textbox(self, rpn_text):
+        # return
+        rpn_text = ' '.join(rpn_text)
+        self.rpn_text.config(state=NORMAL)
+        self.rpn_text.delete('1.0', END)
+        self.rpn_text.insert(END, 'RPN:' + '\n\n', "bold")
+        self.rpn_text.insert(END, '\t' + rpn_text + '\n\n', "normal")
+        self.rpn_text.config(state=DISABLED)
 
     def _on_create_formula(self):
         formula_text = FormulaCreationDialogue(self).show()
         if formula_text is not None:
             self.add_new_formula(formula_text)
-            self._update_rpn_textbox(formula_text)
 
     def _on_save_formula(self):
         for subscriber in self.formula_save_subscribers:

@@ -21,9 +21,9 @@ class FormulaModel:
     }
 
     main_operators = ['*', '+', '/', '-', '^']
-    single_operand_operators = ['cos', 'arccos', 'sqrt']
+    single_operand_operators = ['cosine', 'arccos', 'sine', 'arcsin', 'tangent', 'arctan', 'blnkrt', 'sqrt']
     reserved = main_operators + ['(', ')']
-    reserved_variable_names = ['A', 'B']  # Todo extend to full letters
+    reserved_variable_names = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
 
     def __init__(self, formula_text):
         self.formula_text = formula_text
@@ -37,6 +37,9 @@ class FormulaModel:
         print(self.rpn, '\n', self.vars)
         # self.extract_vars()
 
+    def get_vars(self):
+        return self.vars
+
     def get_rpn(self):
         return self.rpn
 
@@ -48,45 +51,51 @@ class FormulaModel:
 
     def evaluate(self, vars):
 
-        for key in vars:
-            if key == 'A':
-                A = vars[key]
-            elif key == 'B':
-                B = vars[key]
-            elif key == 'C':
-                C = vars[key]
-            elif key == 'D':
-                D = vars[key]
-            elif key == 'E':
-                E = vars[key]
-            elif key == 'F':
-                F = vars[key]
-            elif key == 'G':
-                G = vars[key]
-            elif key == 'H':
-                H = vars[key]
-            elif key == 'I':
-                I = vars[key]
-            elif key == 'J':
-                J = vars[key]
+        answer = "Not possible to calculate"
+        vars_stack = stack.StackClass()
+        for item in self.rpn:
 
-        res = eval(self.formula)
-        return res
+            if item in self.main_operators:
+                v1 = vars_stack.pop_stack()
+                v2 = vars_stack.pop_stack()
 
-    # def extract_vars(self):
-    #     operators = self.list_of_functions.keys() # can be replaced with values to get the 'values'
-    #
-    #     text = self.formula_text
-    #     for op in operators:
-    #         text = text.replace(op, '')
-    #
-    #     for rm in self.reserved:
-    #         text = text.replace(rm, '')
-    #
-    #     text = sorted(set(text))
-    #     self.vars = tuple(text)
-    #
-    #     return self.vars
+                answer = self.evaluate_normal_operator(item, v1, v2)
+                vars_stack.push_stack(answer)
+            elif item in self.single_operand_operators:
+                v1 = vars_stack.pop_stack()
+
+                answer = self.evaluate_single_oprand_operator(item, v1)
+                vars_stack.push_stack(answer)
+            elif type(item) is int or type(item) is float:
+                vars_stack.push_stack(item)
+            elif item in vars.keys():
+                vars_stack.push_stack(float(vars[item]))
+            else:
+                # todo show this in the gui
+                print("eval formula: the item is not recognised in the rpn {}".format(item))
+
+        return vars_stack.pop_stack()
+
+    def evaluate_normal_operator(self, operator, v1, v2): # todo complete this to include all operators used in the gui
+        if operator == '*':
+            return v1 * v2
+        elif operator == '/':
+            # todo remember to check devision by zero
+            pass
+        elif operator == '+':
+            return v1 + v2
+        else:
+            # todo send an error that operator not recognised
+            print("fomula_modl: the normal operator not recognised")
+
+    def evaluate_single_oprand_operator(self, operator, v):
+        if operator == "cosine":
+            return np.cos(v)
+        elif operator == "sine":
+            return np.sin(v)
+        else:
+            # todo send an error that operator not recognised
+            print("fomula_modl: the single operand operator not recognised")
 
     def string_to_rpn(self, items):
         main_stack = stack.StackClass()

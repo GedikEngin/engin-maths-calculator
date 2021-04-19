@@ -28,7 +28,7 @@ class StackClass():
             return None
         top_item = self.get_stack_top_element()
         self.stack.pop()
-        return str(top_item)
+        return top_item
 
 
 if __name__ == '__main__':

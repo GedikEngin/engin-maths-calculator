@@ -16,7 +16,8 @@ class FormulaCreationDialogue(Toplevel):
         btn_help = Button(self, relief=RAISED, text='Help', command=self.help_box, width=5)
         btn_help.grid(row=6, column=0, padx=2, pady=5, columnspan=3)
 
-        btn_clear = Button(self, relief=RAISED, text='Clear', width=5)
+        btn_clear = Button(self, relief=RAISED, text='Clear', command=lambda: self.text_item_desc.delete('1.0', END),
+                           width=5)
         btn_clear.grid(row=6, column=3, padx=2, pady=5)
 
         btn_submit = Button(self, relief=RAISED, text='Submit', command=self.on_submit, width=5)
@@ -249,9 +250,13 @@ class FormulaCreationDialogue(Toplevel):
         # btn_squaring.grid(row=1, column=0, padx=2, pady=5)
 
     def update_text(self, btn_text):
-        print(btn_text)
+        print(btn_text) # prints the pressed 'key' in the console
         # idx = self.text_item_desc.curselection()
         self.text_item_desc.insert(END, btn_text)
+
+    # def clear_text(self):
+    #     print('attempting to clear formula box')
+    #     self.text_item_desc.delete(END)
 
     def help_box(self):
         help_box = Toplevel()
@@ -259,6 +264,7 @@ class FormulaCreationDialogue(Toplevel):
         text_item_desc = Text(help_box, width=50, height=10, bg="grey50")
         text_item_desc.insert(END, 'Enter item description')
         text_item_desc.pack()
+
 
     def on_submit(self):
         self.return_variable = self.text_item_desc.get("1.0", END).replace('\n', '')

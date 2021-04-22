@@ -1,46 +1,47 @@
 from tkinter import *
 
 
-class FormulaCreationDialogue(Toplevel):
+class FormulaCreationDialogue(Toplevel): # inherit from tk
 
     def __init__(self, parent):
         Toplevel.__init__(self, parent)
         self.return_variable = None
 
         # formula
-        self.text_item_desc = Text(self, width=80, height=15, bg="grey50")
+        self.text_item_desc = Text(self, width=80, height=15, bg="grey50") # create formula box popup
         self.text_item_desc.grid(row=0, column=0, padx=2, pady=5, columnspan=7)
 
         # buttons
 
-        btn_help = Button(self, relief=RAISED, text='Help', command=self.help_box, width=5)
+        btn_help = Button(self, relief=RAISED, text='Help', command=self.help_box, width=5) # help button
         btn_help.grid(row=6, column=0, padx=2, pady=5, columnspan=3)
 
-        btn_clear = Button(self, relief=RAISED, text='Clear', command=lambda: self.text_item_desc.delete('1.0', END),
+        btn_clear = Button(self, relief=RAISED, text='Clear', command=lambda: self.text_item_desc.delete('1.0', END), # clear button
                            width=5)
         btn_clear.grid(row=6, column=3, padx=2, pady=5)
 
-        btn_submit = Button(self, relief=RAISED, text='Submit', command=self.on_submit, width=5)
+        btn_submit = Button(self, relief=RAISED, text='Submit', command=self.on_submit, width=5) # submit button
         btn_submit.grid(row=6, column=4, padx=2, pady=5, columnspan=3)
 
-        # icon buttons
+        # icon buttons (might need to change / to \ to work with different OS)
         ## used
 
         blank_power = PhotoImage(file=r"gui/icons/blank_power.png")
         btn_blank_power = Button(self, relief=RAISED, image=blank_power, command=lambda: self.update_text(
-            "()^()"))  # todo redraw the icon to represent the change
+            "()^()"))
         btn_blank_power.image = blank_power
         btn_blank_power.grid(row=1, column=0, padx=2, pady=5)
 
-        square_root = PhotoImage(file=r"gui/icons/square_root.png")
-        btn_square_root = Button(self, relief=RAISED, image=square_root, command=lambda: self.update_text("sqrt()"))
-        btn_square_root.image = square_root
-        btn_square_root.grid(row=1, column=1, padx=2, pady=5)
-
         blank_root = PhotoImage(file=r"gui/icons/blank_root.png")
-        btn_blank_root = Button(self, relief=RAISED, image=blank_root, command=lambda: self.update_text("()blnkrt()"))
+        btn_blank_root = Button(self, relief=RAISED, image=blank_root, command=lambda: self.update_text("()root()"))
         btn_blank_root.image = blank_root
-        btn_blank_root.grid(row=1, column=2, padx=2, pady=5)
+        btn_blank_root.grid(row=1, column=1, padx=2, pady=5)
+
+        natural_log = PhotoImage(file=r"gui\icons\natural_log.png")
+        btn_natural_log = Button(self, relief=RAISED, image=natural_log, command=lambda: self.update_text("ln()"))
+        btn_natural_log.image = natural_log
+        btn_natural_log.grid(row=1, column=2, padx=2, pady=5)
+
 
         left_bracket = PhotoImage(file=r"gui/icons/left_bracket.png")
         btn_left_bracket = Button(self, relief=RAISED, image=left_bracket, command=lambda: self.update_text("("))
@@ -204,15 +205,17 @@ class FormulaCreationDialogue(Toplevel):
 
         ## unused
 
+        # square_root = PhotoImage(file=r"gui/icons/square_root.png")
+        # btn_square_root = Button(self, relief=RAISED, image=square_root, command=lambda: self.update_text("sqrt()"))
+        # btn_square_root.image = square_root
+        # btn_square_root.grid(row=1, column=1, padx=2, pady=5)
+
         # e_to_the_power = PhotoImage(file=r"gui\icons\e_to_the_power.png")
         # btn_e_to_the_power = Button(self, relief=RAISED, image=e_to_the_power, command=lambda: self.update_text("e^()"))
         # btn_e_to_the_power.image = e_to_the_power
         # btn_e_to_the_power.grid(row=1, column=2, padx=2, pady=5)
         #
-        # natural_log = PhotoImage(file=r"gui\icons\natural_log.png")
-        # btn_natural_log = Button(self, relief=RAISED, image=natural_log, command=lambda: self.update_text("ln()"))
-        # btn_natural_log.image = natural_log
-        # btn_natural_log.grid(row=1, column=3, padx=2, pady=5)
+
         #
         # blank_base_log = PhotoImage(file=r"gui\icons\blank_base_log.png")
         # btn_blank_base_log = Button(self, relief=RAISED, image=blank_base_log, command=lambda: self.update_text("log[]()"))
@@ -249,22 +252,21 @@ class FormulaCreationDialogue(Toplevel):
         # btn_squaring.image = squaring
         # btn_squaring.grid(row=1, column=0, padx=2, pady=5)
 
-    def update_text(self, btn_text):
-        print(btn_text) # prints the pressed 'key' in the console
-        # idx = self.text_item_desc.curselection()
+    def update_text(self, btn_text): # updates formula textbox
+        # print(btn_text) # prints the pressed 'key' in the console
+        # idx = self.text_item_desc.curselection() # failed attempt at cur selection to make inputs appear where cursor is
         self.text_item_desc.insert(END, btn_text)
-
-    # def clear_text(self):
-    #     print('attempting to clear formula box')
-    #     self.text_item_desc.delete(END)
 
     def help_box(self):
         help_box = Toplevel()
 
         text_item_desc = Text(help_box, width=50, height=10, bg="grey50")
-        text_item_desc.insert(END, 'Enter item description')
+        text_item_desc.insert(END, 'This is a help box: \n'
+                                   'Trig functions operate in the format of <cosine(A*B)> \n'
+                                   'The four base operations work on a <X*Y> basis \n'
+                                   'Logarithms operate as')
+        self.text_item_desc.config(state=DISABLED)
         text_item_desc.pack()
-
 
     def on_submit(self):
         self.return_variable = self.text_item_desc.get("1.0", END).replace('\n', '')
@@ -273,7 +275,7 @@ class FormulaCreationDialogue(Toplevel):
     def show(self):
         self.wm_deiconify()  # they freeze and stop the code
         self.grab_set()  # they freeze and stop the code
-        self.wait_window()  # it blocks the code, prevents the code from moving onto the next lin
+        self.wait_window()  # it blocks the code, prevents the code from moving onto the next line
         return self.return_variable
 
 

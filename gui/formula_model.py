@@ -17,11 +17,12 @@ class FormulaModel:
         'arctan(': 'np.arctan(',
         '/': '/',
         '-': '-',
-        'blnkrt(': '**(1/'
+        'ln': 'np.log(',
+        'root':'root'
     }
 
-    main_operators = ['*', '+', '/', '-', '^']
-    single_operand_operators = ['cosine', 'arccos', 'sine', 'arcsin', 'tangent', 'arctan', 'blnkrt', 'sqrt']
+    main_operators = ['*', '+', '/', '-', '^', 'root']
+    single_operand_operators = ['cosine', 'arccos', 'sine', 'arcsin', 'tangent', 'arctan', 'blnkrt', 'sqrt', 'ln']
     reserved = main_operators + ['(', ')']
     reserved_variable_names = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
 
@@ -76,16 +77,27 @@ class FormulaModel:
 
         return vars_stack.pop_stack()
 
-    def evaluate_normal_operator(self, operator, v1, v2): # todo complete this to include all operators used in the gui
+    def evaluate_normal_operator(self, operator, v1, v2):
         if operator == '*':
             return v1 * v2
+
         elif operator == '/':
-            # todo remember to check devision by zero
-            pass
+            if v1 == 0:
+                return 0
+            elif v2 == 0:
+                return
+            return v1/v2
+
         elif operator == '+':
             return v1 + v2
+
+        elif operator == '-':
+            return v1-v2
+
+        elif operator == 'root':
+            return v1**(1/v2)
+
         else:
-            # todo send an error that operator not recognised
             print("fomula_modl: the normal operator not recognised")
 
     def evaluate_single_oprand_operator(self, operator, v):
@@ -93,8 +105,17 @@ class FormulaModel:
             return np.cos(v)
         elif operator == "sine":
             return np.sin(v)
+        elif operator == 'tangent':
+            return np.tan(v)
+        elif operator == 'arccos':
+            return np.arccos(v)
+        elif operator == 'arcsin':
+            return np.arcsin(v)
+        elif operator == 'arctan':
+            return np.arctan(v)
+        elif operator == 'ln':
+            return np.log(v)
         else:
-            # todo send an error that operator not recognised
             print("fomula_modl: the single operand operator not recognised")
 
     def string_to_rpn(self, items):

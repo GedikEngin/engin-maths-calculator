@@ -256,11 +256,11 @@ class FormulaCreationDialogue(Toplevel):  # inherit from tk
         # idx = self.text_item_desc.curselection() # failed attempt at cur selection to make inputs appear where cursor is
         self.text_item_desc.insert(END, btn_text)
 
-    def help_box(self):
-        help_box = Toplevel()
+    def help_box(self):     # focuses on helpbox
+        help_box = Toplevel()       # parent class
 
-        text_item_desc = Text(help_box, width=85, height=10, bg="grey50")
-        text_item_desc.insert(END, 'This is a help box: \n'
+        text_item_desc = Text(help_box, width=85, height=10, bg="grey50")       # config
+        text_item_desc.insert(END, 'This is a help box: \n'     # actual help text
                                    'Trig functions operate in the format of <cosine(A*B)> \n'
                                    'The four base operations work on a <X*Y> basis \n'
                                    'Logarithms operate as taking the natural log <ln> of the variable assigned to it \n'
@@ -269,12 +269,12 @@ class FormulaCreationDialogue(Toplevel):  # inherit from tk
                                    'Use additional brackets if a formula that should be valid does not work correctly \n'
                                    'It is advised you keep this on the side as a reminder until you shutdown the '
                                    'formula creation window fully')
-        self.text_item_desc.config(state=DISABLED)
-        text_item_desc.grid(row=0, column=0, padx=2, pady=5)
+        self.text_item_desc.config(state=DISABLED)      # disable editing
+        text_item_desc.grid(row=0, column=0, padx=2, pady=5)        # placement and buffers
 
     def on_submit(self):
-        self.return_variable = self.text_item_desc.get("1.0", END).replace('\n', '')
-        self.destroy()
+        self.return_variable = self.text_item_desc.get("1.0", END).replace('\n', '')        # gets the return variable and replaces the \n with space
+        self.destroy()      # destroy window
 
     def show(self):
         self.wm_deiconify()  # they freeze and stop the code

@@ -1,10 +1,10 @@
 ## init database
 
 import sqlite3
-conn = sqlite3.connect('Mathematics_database.db')
+conn = sqlite3.connect('Mathematics_database.db')   # create database file
 
 c = conn.cursor()
-try:
+try:    # attempt to create tables
     c.execute('''CREATE TABLE IF NOT EXISTS modules
                 (id INTEGER PRIMARY KEY NOT NULL,
                  name VARCHAR(25) NOT NULL,
@@ -38,7 +38,6 @@ try:
 except:
     pass
 
-# todo
 
 
 # module

@@ -1,30 +1,30 @@
 from tkinter import *
 
 
-class FormulaCreationDialogue(Toplevel): # inherit from tk
+class FormulaCreationDialogue(Toplevel):  # inherit from tk
 
     def __init__(self, parent):
         Toplevel.__init__(self, parent)
-        self.return_variable = None
+        self.return_variable = None     # assignment in constructor
 
         # formula
-        self.text_item_desc = Text(self, width=80, height=15, bg="grey50") # create formula box popup
+        self.text_item_desc = Text(self, width=80, height=15, bg="grey50")  # create formula box popup
         self.text_item_desc.grid(row=0, column=0, padx=2, pady=5, columnspan=7)
 
         # buttons
 
-        btn_help = Button(self, relief=RAISED, text='Help', command=self.help_box, width=5) # help button
+        btn_help = Button(self, relief=RAISED, text='Help', command=self.help_box, width=5)  # help button
         btn_help.grid(row=6, column=0, padx=2, pady=5, columnspan=3)
 
-        btn_clear = Button(self, relief=RAISED, text='Clear', command=lambda: self.text_item_desc.delete('1.0', END), # clear button
-                           width=5)
+        btn_clear = Button(self, relief=RAISED, text='Clear', command=lambda: self.text_item_desc.delete('1.0', END),
+                           width=5)     # clear button, from 1 to end
         btn_clear.grid(row=6, column=3, padx=2, pady=5)
 
-        btn_submit = Button(self, relief=RAISED, text='Submit', command=self.on_submit, width=5) # submit button
+        btn_submit = Button(self, relief=RAISED, text='Submit', command=self.on_submit, width=5)  # submit button
         btn_submit.grid(row=6, column=4, padx=2, pady=5, columnspan=3)
 
         # icon buttons (might need to change / to \ to work with different OS)
-        ## used
+        # used, constant format, all are similar structure, grabbing icons from path and calling a function to display string
 
         blank_power = PhotoImage(file=r"gui/icons/blank_power.png")
         btn_blank_power = Button(self, relief=RAISED, image=blank_power, command=lambda: self.update_text(
@@ -41,7 +41,6 @@ class FormulaCreationDialogue(Toplevel): # inherit from tk
         btn_natural_log = Button(self, relief=RAISED, image=natural_log, command=lambda: self.update_text("ln()"))
         btn_natural_log.image = natural_log
         btn_natural_log.grid(row=1, column=2, padx=2, pady=5)
-
 
         left_bracket = PhotoImage(file=r"gui/icons/left_bracket.png")
         btn_left_bracket = Button(self, relief=RAISED, image=left_bracket, command=lambda: self.update_text("("))
@@ -252,7 +251,7 @@ class FormulaCreationDialogue(Toplevel): # inherit from tk
         # btn_squaring.image = squaring
         # btn_squaring.grid(row=1, column=0, padx=2, pady=5)
 
-    def update_text(self, btn_text): # updates formula textbox
+    def update_text(self, btn_text):  # updates formula textbox
         # print(btn_text) # prints the pressed 'key' in the console
         # idx = self.text_item_desc.curselection() # failed attempt at cur selection to make inputs appear where cursor is
         self.text_item_desc.insert(END, btn_text)
@@ -260,13 +259,18 @@ class FormulaCreationDialogue(Toplevel): # inherit from tk
     def help_box(self):
         help_box = Toplevel()
 
-        text_item_desc = Text(help_box, width=50, height=10, bg="grey50")
+        text_item_desc = Text(help_box, width=85, height=10, bg="grey50")
         text_item_desc.insert(END, 'This is a help box: \n'
                                    'Trig functions operate in the format of <cosine(A*B)> \n'
                                    'The four base operations work on a <X*Y> basis \n'
-                                   'Logarithms operate as')
+                                   'Logarithms operate as taking the natural log <ln> of the variable assigned to it \n'
+                                   'The order of operation is a very sensitive system due to RPN being used to '
+                                   'evaluate \n'
+                                   'Use additional brackets if a formula that should be valid does not work correctly \n'
+                                   'It is advised you keep this on the side as a reminder until you shutdown the '
+                                   'formula creation window fully')
         self.text_item_desc.config(state=DISABLED)
-        text_item_desc.pack()
+        text_item_desc.grid(row=0, column=0, padx=2, pady=5)
 
     def on_submit(self):
         self.return_variable = self.text_item_desc.get("1.0", END).replace('\n', '')

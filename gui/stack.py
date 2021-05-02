@@ -2,8 +2,9 @@
 
 class StackClass():
 
-    def __init__(self): # constructor
+    def __init__(self):  # constructor
         self.stack = []
+
     # accessors
 
     def get_stack_elements(self):

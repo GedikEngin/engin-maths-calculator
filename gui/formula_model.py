@@ -26,7 +26,7 @@ class FormulaModel:
     reserved = main_operators + ['(', ')']  # type of brackets the rpn converter and evaluator will recognise
     reserved_variable_names = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']    # the variable names that will be recognised explicitly by the system
 
-    def __init__(self, formula_text): # contrusctor method
+    def __init__(self, formula_text): # constructor method
         self.formula_text = formula_text
         self.vars = None
         self.formula = None
@@ -104,25 +104,25 @@ class FormulaModel:
 
     def evaluate_single_oprand_operator(self, operator, v):
         if operator == "cosine":
-            return np.cos(v)
+            return np.cos(v)        # use numpy to evaluate
 
         elif operator == "sine":
-            return np.sin(v)
+            return np.sin(v)        # use numpy to evaluate
 
         elif operator == 'tangent':
-            return np.tan(v)
+            return np.tan(v)        # use numpy to evaluate
 
         elif operator == 'arccos':
-            return np.arccos(v)
+            return np.arccos(v)     # use numpy to evaluate
 
         elif operator == 'arcsin':
-            return np.arcsin(v)
+            return np.arcsin(v)     # use numpy to evaluate
 
         elif operator == 'arctan':
-            return np.arctan(v)
+            return np.arctan(v)     # use numpy to evaluate
 
         elif operator == 'ln':
-            return np.log(v)
+            return np.log(v)        # use numpy to evaluate
 
         else:
             print("formula_model: the single operand operator not recognised")      # error message if it doesnt recognise single operand operator
